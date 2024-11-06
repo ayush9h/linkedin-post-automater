@@ -3,7 +3,7 @@ from flask_cors import CORS
 from services.generate_content import generate_content
 from services.generate_image import generate_image
 from services.post_linkedin import post_to_linkedin
-from services.rag_user import post_summary
+from services.post_analysis import post_summary
 
 
 app = Flask(__name__)
