@@ -11,7 +11,7 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route('/api/v1/generate-content', methods=['POST'])
+@app.post('/api/v1/generate-content')
 def generate_content_route():
     content = None
 
@@ -25,7 +25,7 @@ def generate_content_route():
         return jsonify({"content": content})
 
 
-@app.route('/api/v1/generate-image', methods=['POST'])
+@app.post('/api/v1/generate-image')
 def generate_image_route():
 
     request_data = request.get_json()
@@ -38,7 +38,7 @@ def generate_image_route():
         return jsonify({"error": str(e)}), 500
 
 
-@app.route('/api/v1/post-linkedin', methods=['POST'])
+@app.post('/api/v1/post-linkedin')
 def post_linkedin_route():
     try:
         request_data = request.get_json()
@@ -52,7 +52,7 @@ def post_linkedin_route():
         return jsonify({"error": str(e)}), 500
 
 
-@app.route('/api/v1/post-analysis', methods=['GET'])
+@app.get('/api/v1/post-analysis')
 def get_comments_route():
     try:
         post_url = request.args.get('post_url')
