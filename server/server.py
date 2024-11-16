@@ -11,39 +11,39 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.post('/api/v1/generate-content')
+@app.post("/api/v1/generate-content")
 def generate_content_route():
     content = None
 
     request_data = request.get_json()
-    user_input = request_data.get('query')
+    user_input = request_data.get("query")
 
     response = generate_content(user_input)
 
     if response:
-        content = response[0].chat_history[2]['content']
+        content = response[0].chat_history[2]["content"]
         return jsonify({"content": content})
 
 
-@app.post('/api/v1/generate-image')
+@app.post("/api/v1/generate-image")
 def generate_image_route():
 
     request_data = request.get_json()
-    user_image = request_data.get('query')
+    user_image = request_data.get("query")
 
     try:
         generate_image(user_image)
-        return send_file('generated_image.png', mimetype='image/png')
+        return send_file("generated_image.png", mimetype="image/png")
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 
-@app.post('/api/v1/post-linkedin')
+@app.post("/api/v1/post-linkedin")
 def post_linkedin_route():
     try:
         request_data = request.get_json()
-        generated_content = request_data.get('generated_content')
-        image_path = request_data.get('image_path')
+        generated_content = request_data.get("generated_content")
+        image_path = request_data.get("image_path")
 
         linkedin_asset = post_to_linkedin(generated_content, image_path)
 
@@ -52,17 +52,14 @@ def post_linkedin_route():
         return jsonify({"error": str(e)}), 500
 
 
-@app.get('/api/v1/post-analysis')
+@app.get("/api/v1/post-analysis")
 def get_comments_route():
     try:
-        post_url = request.args.get('post_url')
+        post_url = request.args.get("post_url")
 
         analysis = post_summary(str(post_url))
 
-        return jsonify({
-            "status": "success",
-            "analysis": analysis["content"]
-        }), 200
+        return jsonify({"status": "success", "analysis": analysis["content"]}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

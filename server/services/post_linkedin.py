@@ -7,31 +7,33 @@ def upload_image(image_path):
 
     headers = {
         "Authorization": f"Bearer {development.ACCESS_TOKEN}",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
     }
 
     data = {
         "registerUploadRequest": {
             "recipes": ["urn:li:digitalmediaRecipe:feedshare-image"],
             "owner": development.PERSON_URN_KEY,
-            "serviceRelationships": [{
-                "relationshipType": "OWNER",
-                "identifier": "urn:li:userGeneratedContent"
-            }]
+            "serviceRelationships": [
+                {
+                    "relationshipType": "OWNER",
+                    "identifier": "urn:li:userGeneratedContent",
+                }
+            ],
         }
     }
 
     res_data = requests.post(url, json=data, headers=headers).json()
 
-    upload_url = res_data["value"]["uploadMechanism"]["com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"]["uploadUrl"]
+    upload_url = res_data["value"]["uploadMechanism"][
+        "com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"
+    ]["uploadUrl"]
     image_asset = res_data["value"]["asset"]
 
     with open(image_path, "rb") as image_file:
         image_data = image_file.read()
 
-    headers = {
-        "Authorization": f"Bearer {development.ACCESS_TOKEN}"
-    }
+    headers = {"Authorization": f"Bearer {development.ACCESS_TOKEN}"}
 
     res = requests.post(upload_url, data=image_data, headers=headers)
 
@@ -55,25 +57,19 @@ def post_to_linkedin(generated_content, image_path):
         "lifecycleState": "PUBLISHED",
         "specificContent": {
             "com.linkedin.ugc.ShareContent": {
-                "shareCommentary": {
-                    "text": generated_content
-                },
+                "shareCommentary": {"text": generated_content},
                 "shareMediaCategory": "IMAGE",
                 "media": [
                     {
                         "status": "READY",
                         "description": {"text": generated_content},
                         "media": image_asset,
-                        "title": {
-                            "text": "LinkedIn Post"
-                        }
+                        "title": {"text": "LinkedIn Post"},
                     }
-                ]
+                ],
             }
         },
-        "visibility": {
-            "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
-        }
+        "visibility": {"com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"},
     }
 
     try:

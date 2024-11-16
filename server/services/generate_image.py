@@ -4,14 +4,12 @@ import requests
 from autogen import AssistantAgent, ConversableAgent
 from config import development
 
-headers = {
-    "Authorization": f"Bearer {development.HUGGINGFACE_API_KEY}"
-}
+headers = {"Authorization": f"Bearer {development.HUGGINGFACE_API_KEY}"}
 
 llm_config = {
     "model": "gemma-7b-it",
     "api_key": development.GROQ_API_KEY,
-    "api_type": "groq"
+    "api_type": "groq",
 }
 
 CRITIC_SYSTEM_MESSAGE = """You need to improve the post content you saw.
@@ -35,9 +33,9 @@ def _is_termination_message(msg):
     return False
 
 
-'''
+"""
 Critic Agent
-'''
+"""
 critic_agent = ConversableAgent(
     name="Critic Agent",
     llm_config=llm_config,
@@ -51,28 +49,24 @@ critic_agent = ConversableAgent(
 # Prompt Improver Agent
 prompt_improver_agent = AssistantAgent(
     name="Prompt Improver Agent",
-    system_message='''
+    system_message="""
     You are a professional assistant specialized in generating prompts for image creation, not giving suggestions. 
     Your task is to directly generate detailed, descriptive prompts for image generation based on the user's input. 
     Ensure that the prompts include vivid descriptions, context, and any necessary visual details to guide the creation of high-quality images. Give only one option, no multiple options.
     Avoid offering advice or feedback—just provide the final, ready-to-use image prompts.
-    ''',
+    """,
     llm_config=llm_config,
     max_consecutive_auto_reply=1,
-    human_input_mode="NEVER"
+    human_input_mode="NEVER",
 )
 
 
 def query(payload):
     response = requests.post(
-        development.HUGGINGFACE_API_URL,
-        headers=headers,
-        json=payload
+        development.HUGGINGFACE_API_URL, headers=headers, json=payload
     )
     if response.status_code != 200:
-        raise Exception(
-            f"Request failed: {response.status_code}, {response.text}"
-        )
+        raise Exception(f"Request failed: {response.status_code}, {response.text}")
     return response.content
 
 
@@ -84,9 +78,10 @@ def generate_image(user_input):
     }
 
     updated_query = prompt_improver_agent.generate_reply(
-        messages=[support_request_first])
+        messages=[support_request_first]
+    )
 
-    final_prompt = updated_query['content']
+    final_prompt = updated_query["content"]
 
     print(final_prompt)
 
@@ -96,15 +91,18 @@ def generate_image(user_input):
     }
 
     updated_query_second = critic_agent.generate_reply(
-        messages=[support_request_second])
+        messages=[support_request_second]
+    )
 
-    final_prompt_second = updated_query_second['content']
+    final_prompt_second = updated_query_second["content"]
 
     print(final_prompt_second)
 
-    image_bytes = query({
-        "inputs": str(final_prompt_second),
-    })
+    image_bytes = query(
+        {
+            "inputs": str(final_prompt_second),
+        }
+    )
 
     try:
         image = Image.open(io.BytesIO(image_bytes))
