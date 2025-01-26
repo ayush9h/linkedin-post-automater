@@ -1,7 +1,7 @@
 # LinkedIn Post Automation
 
-**Note**
-Use with caution, as a LinkedIn account is active with it.
+> [!IMPORTANT]  
+> Use with caution, LinkedIn account linked with the application.
 
 ## Overview
 
