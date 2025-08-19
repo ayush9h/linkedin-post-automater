@@ -16,7 +16,6 @@ LinkedIn Post Automation is a comprehensive application designed to automate the
 1. **AI-Powered Content Generation**: Automatically generate professional LinkedIn posts tailored to your input.
 2. **Custom Image Creation**: Generate high-quality, AI-designed images based on user prompts.
 3. **Automated Posting**: Schedule and post content directly to LinkedIn for multiple days.
-4. **Post Sentiment Analysis**: Analyze LinkedIn post comments to determine sentiment and conversation tone.
 
 ---
 
@@ -210,7 +209,6 @@ The **LinkedIn Post Automation** system automates the entire process of content 
    - Generates a custom image (AI-powered).
 3. **Image Upload**: Backend uploads the generated image to LinkedIn via the `POST /assets` endpoint and receives an image asset ID.
 4. **Post Creation**: Backend creates a LinkedIn post using the content and image asset ID → Post is uploaded to LinkedIn.
-5. **Sentiment Analysis**: User can analyze post comments via the sentiment analysis endpoint for detailed insights.
 
 ---
 
@@ -228,9 +226,6 @@ The **LinkedIn Post Automation** system automates the entire process of content 
    - Combine generated content and image.
    - Post directly to your LinkedIn account.
 
-4. **Analyze Posts**:
-   - Enter a LinkedIn post URL.
-   - Get a sentiment analysis breakdown of the comments.
 
 ---
 
