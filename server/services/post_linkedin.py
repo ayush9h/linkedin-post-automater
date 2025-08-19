@@ -1,82 +1,43 @@
-from config import development
 import requests
+from config.development import LINKEDIN_API_URL, PERSON_URN_KEY, get_headers
 
+ASSETS_REGISTER_UPLOAD_URL = f"{LINKEDIN_API_URL}/assets?action=registerUpload" 
+POST_URL = f"{LINKEDIN_API_URL}/ugcPosts" 
 
 def upload_image(image_path):
-    url = "https://api.linkedin.com/v2/assets?action=registerUpload"
-
-    headers = {
-        "Authorization": f"Bearer {development.ACCESS_TOKEN}",
-        "Content-Type": "application/json",
-    }
-
+    HEADERS = get_headers() 
     data = {
         "registerUploadRequest": {
             "recipes": ["urn:li:digitalmediaRecipe:feedshare-image"],
-            "owner": development.PERSON_URN_KEY,
-            "serviceRelationships": [
-                {
-                    "relationshipType": "OWNER",
-                    "identifier": "urn:li:userGeneratedContent",
-                }
-            ],
+            "owner": PERSON_URN_KEY,
+            "serviceRelationships": [{"relationshipType": "OWNER", "identifier": "urn:li:userGeneratedContent"}],
         }
     }
-
-    res_data = requests.post(url, json=data, headers=headers).json()
-
-    upload_url = res_data["value"]["uploadMechanism"][
-        "com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"
-    ]["uploadUrl"]
+    res_data = requests.post(
+        ASSETS_REGISTER_UPLOAD_URL, json=data, headers=HEADERS
+    ).json()
+    upload_url = res_data["value"]["uploadMechanism"]["com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"]["uploadUrl"]
     image_asset = res_data["value"]["asset"]
 
     with open(image_path, "rb") as image_file:
-        image_data = image_file.read()
-
-    headers = {"Authorization": f"Bearer {development.ACCESS_TOKEN}"}
-
-    res = requests.post(upload_url, data=image_data, headers=headers)
-
-    print(res.status_code)
+        requests.post(upload_url, data=image_file.read(), headers=HEADERS)
 
     return image_asset
 
-
-def post_to_linkedin(generated_content, image_path):
-    url = "https://api.linkedin.com/v2/ugcPosts"
-
-    headers = {
-        "Authorization": f"Bearer {development.ACCESS_TOKEN}",
-        "Content-Type": "application/json",
-    }
-
+def post_to_linkedin(content, image_path):
+    HEADERS = get_headers(content_type="application/octet-stream")
     image_asset = upload_image(image_path)
-
     post_data = {
-        "author": development.PERSON_URN_KEY,
+        "author": PERSON_URN_KEY,
         "lifecycleState": "PUBLISHED",
         "specificContent": {
             "com.linkedin.ugc.ShareContent": {
-                "shareCommentary": {"text": generated_content},
+                "shareCommentary": {"text": content},
                 "shareMediaCategory": "IMAGE",
-                "media": [
-                    {
-                        "status": "READY",
-                        "description": {"text": generated_content},
-                        "media": image_asset,
-                        "title": {"text": "LinkedIn Post"},
-                    }
-                ],
-            }
+                "media": [{"status": "READY", "description": {"text": content}, "media": image_asset, "title": {"text": "LinkedIn Post"}}],
+            },
         },
         "visibility": {"com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"},
     }
-
-    try:
-        response = requests.post(url, json=post_data, headers=headers)
-        response.raise_for_status()
-
-        print(f"Successfully posted on LinkedIn: {response.status_code}")
-
-    except requests.exceptions.RequestException as e:
-        print(f"Error posting on LinkedIn: {e}")
+    response = requests.post(POST_URL, json=post_data, headers=HEADERS)
+    response.raise_for_status()
