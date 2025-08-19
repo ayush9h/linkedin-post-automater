@@ -4,7 +4,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily:{
-        ubuntu:["Ubuntu","sans-serif"]
+        montserrat:["Montserrat","sans-serif"],
+        bebas:["Bebas Neue","sans-serif"]
       },
     },
   },
