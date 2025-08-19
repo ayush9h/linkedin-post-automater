@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+  }
 
 body{
     background-color: #F8FBFB;
