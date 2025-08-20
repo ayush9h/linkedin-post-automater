@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from datetime import datetime, timedelta
 
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
@@ -7,7 +8,7 @@ from flask_cors import CORS
 # from services.feedback import post_summary
 from services.generate_content import generate_content
 from services.generate_image import generate_image
-from services.post_linkedin import post_to_linkedin
+from tasks.task import publish_linkedin_post
 
 app = Flask(__name__)
 
@@ -49,24 +50,26 @@ def post_linkedin_route():
         request_data = request.get_json()
         generated_content = request_data.get('generated_content')
         image_path = request_data.get('image_path')
+        delay = request_data.get("delay", 0)
 
-        linkedin_asset = post_to_linkedin(generated_content, image_path)
+        if delay > 0:
+            eta = datetime.now() + timedelta(minutes=delay)
+            job = publish_linkedin_post.apply_async(
+                args=[generated_content, image_path], eta=eta
+            )
+        else:
+            job = publish_linkedin_post.apply_async(
+                args=[generated_content, image_path]
+            )
+        return (
+            jsonify(
+                {"status": "success", "job_id": job.id},
+            ),
+            202,
+        )
 
-        return jsonify({"status": "success", "linkedinpost": linkedin_asset}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
-# @app.route("/api/v1/post-analysis", methods=["GET"])
-# def get_comments_route():
-#     try:
-#         post_url = request.args.get("post_url")
-
-#         analysis = asyncio.run(post_summary(str(post_url)))
-
-#         return jsonify({"status": "success", "analysis": analysis["content"]}), 200
-#     except Exception as e:
-#         return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":

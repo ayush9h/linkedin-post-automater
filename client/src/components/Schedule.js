@@ -18,6 +18,7 @@ export default function Schedule({ content, selectedDays, setSelectedDays }) {
         {
           generated_content: content,
           image_path: 'generated_image.png',
+          delay: 2
         }
       );
 
@@ -29,17 +30,6 @@ export default function Schedule({ content, selectedDays, setSelectedDays }) {
     }
   };
 
-  const handleAutomatedPosts = async () => {
-    for (let day = 0; day < selectedDays; day++){
-      setStatus(`Posting for day ${day + 1}`);
-      await handlePostToLinkedIn();
-      
-      if (day < selectedDays - 1) {
-        await new Promise((resolve) => setTimeout(resolve, 86400000));
-      }
-    }
-    setStatus("All posts completed.")
-  }
 
   return (
     <div className="max-width">

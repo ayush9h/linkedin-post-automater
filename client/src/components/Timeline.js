@@ -23,9 +23,6 @@ export default function Timeline() {
                     <ImageQuery image={image} setImage={setImage} />
                 </div>
             </div>
-
-
-            {/* <Preview content={content} image={image} selectedDays={days} selectedDayNames={selectedDayNames}/> */}
         </>
     );
 }

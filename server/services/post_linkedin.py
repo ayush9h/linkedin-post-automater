@@ -5,17 +5,27 @@ ASSETS_REGISTER_UPLOAD_URL = f"{LINKEDIN_API_URL}/assets?action=registerUpload"
 POST_URL = f"{LINKEDIN_API_URL}/ugcPosts" 
 
 def upload_image(image_path):
+    if not image_path:
+        return None
+
     HEADERS = get_headers() 
     data = {
         "registerUploadRequest": {
             "recipes": ["urn:li:digitalmediaRecipe:feedshare-image"],
             "owner": PERSON_URN_KEY,
-            "serviceRelationships": [{"relationshipType": "OWNER", "identifier": "urn:li:userGeneratedContent"}],
+            "serviceRelationships": [
+                {
+                    "relationshipType": "OWNER",
+                    "identifier": "urn:li:userGeneratedContent",
+                }
+            ],
         }
     }
-    res_data = requests.post(
-        ASSETS_REGISTER_UPLOAD_URL, json=data, headers=HEADERS
-    ).json()
+
+    res = requests.post(ASSETS_REGISTER_UPLOAD_URL, json=data, headers=HEADERS)
+    res.raise_for_status()
+    res_data = res.json()
+
     upload_url = res_data["value"]["uploadMechanism"]["com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"]["uploadUrl"]
     image_asset = res_data["value"]["asset"]
 
@@ -24,20 +34,33 @@ def upload_image(image_path):
 
     return image_asset
 
-def post_to_linkedin(content, image_path):
+
+def post_to_linkedin(content, image_path=None):
     HEADERS = get_headers(content_type="application/octet-stream")
     image_asset = upload_image(image_path)
+
     post_data = {
         "author": PERSON_URN_KEY,
         "lifecycleState": "PUBLISHED",
         "specificContent": {
             "com.linkedin.ugc.ShareContent": {
                 "shareCommentary": {"text": content},
-                "shareMediaCategory": "IMAGE",
-                "media": [{"status": "READY", "description": {"text": content}, "media": image_asset, "title": {"text": "LinkedIn Post"}}],
+                "shareMediaCategory": "NONE" if not image_asset else "IMAGE",
             },
         },
         "visibility": {"com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"},
     }
+
+    if image_asset:
+        post_data["specificContent"]["com.linkedin.ugc.ShareContent"]["media"] = [
+            {
+                "status": "READY",
+                "description": {"text": content},
+                "media": image_asset,
+                "title": {"text": "LinkedIn Post"},
+            }
+        ]
+
     response = requests.post(POST_URL, json=post_data, headers=HEADERS)
     response.raise_for_status()
+    return response.json()
