@@ -9,7 +9,8 @@ LinkedIn Post Automation is a comprehensive application designed to automate the
 
 ---
 ## Architecture
-<img width="1305" height="701" alt="image" src="https://github.com/user-attachments/assets/bd780283-69ff-43cc-9630-8a8f5897f38d" />
+<img width="1471" height="714" alt="image" src="https://github.com/user-attachments/assets/9a0180c2-7b88-45bf-b190-e1e06ce849db" />
+
 
 ## Features
 
