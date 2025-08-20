@@ -37,13 +37,13 @@ def get_headers(content_type=None):
 
 # LLM Configuration
 model_client = OpenAIChatCompletionClient(
-    model="qwen-2.5-32b",
+    model="openai/gpt-oss-20b",
     base_url="https://api.groq.com/openai/v1",
     api_key=GROQ_API_KEY,
     model_info={
         "vision": False,
         "function_calling": False,
         "json_output": False,
-        "family": ModelFamily.is_gemini,
+        "family": ModelFamily.is_openai,
     },
 )

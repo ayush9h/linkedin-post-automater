@@ -31,12 +31,12 @@ export default function Schedule({ content, selectedDays, setSelectedDays }) {
               }
             }
             catch(err){
-              console.error(error)
+              console.error(err)
             }
           })
         )
         setStatusList(updatedStatusList)
-    }, 2000);
+    }, 10000);
 
     return ()=> clearInterval(interval)
   },[scheduledJobs])
@@ -60,7 +60,7 @@ export default function Schedule({ content, selectedDays, setSelectedDays }) {
         toast.error("Error to schedule post")
       }
     }
-    setscheduledJobs.push(jobIds)
+    setscheduledJobs(jobIds)
     toast.success(`${selectedDays} posts scheduled`)
   };
 
