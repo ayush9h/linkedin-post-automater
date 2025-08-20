@@ -2,10 +2,10 @@ import asyncio
 import logging
 from datetime import datetime, timedelta
 
+from celery.result import AsyncResult
+from celery_app import celery
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
-
-# from services.feedback import post_summary
 from services.generate_content import generate_content
 from services.generate_image import generate_image
 from tasks.task import publish_linkedin_post
@@ -70,6 +70,27 @@ def post_linkedin_route():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/v1/task-status/<task_id>", methods=["GET"])
+def check_task_status(task_id):
+    """
+    Check the status of a Celery task
+    """
+    result = AsyncResult(task_id, app=celery)
+
+    status = result.status
+    response = {"task_id": task_id, "status": status}
+
+    if result.successful():
+        response["result"] = result.result
+
+        result.forget()
+    elif result.failed():
+        response["error"] = str(result.result)
+        result.forget()
+
+    return jsonify(response), 200
 
 
 if __name__ == "__main__":
