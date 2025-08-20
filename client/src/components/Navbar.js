@@ -11,9 +11,6 @@ export default function Navbar() {
                         </NavLink>
                     </div>
 
-                    {/* <div>
-                        <NavLink to="/postanalysis" className="font-montserrat px-4 py-3 rounded-full hover:bg-slate-200 hover:font-semibold transition-all">Analyse Posts</NavLink>
-                    </div> */}
                 </div>    
             </div>
         </nav>

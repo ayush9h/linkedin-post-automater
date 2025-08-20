@@ -2,9 +2,11 @@ export default function Landing() {
     return (
         <>
             <div className="flex flex-col items-center justify-center max-w-3xl m-auto h-96 text-center">
-                <h2 className="px-4 py-2 text-xs bg-white border border-blue-400 rounded-full shadow-xl font-montserrat">
-                    Beta version now live
+                <h2 className="px-4 py-2 text-xs font-semibold font-montserrat rounded-full bg-white text-blue-600 border border-blue-300 shadow-xl flex items-center justify-center gap-2 tracking-wide">
+                  <span className="inline-flex h-2 w-2 rounded-full bg-green-500 animate-ping"></span>
+                  Beta Version Live 
                 </h2>
+                
                 <h2 className="mt-5 text-8xl font-semibold text-slate-800 font-bebas">
                     Automate your LinkedIn <span className="text-blue-500">posts</span> in
                     seconds.

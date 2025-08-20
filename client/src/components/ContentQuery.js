@@ -43,7 +43,7 @@ export default function ContentQuery({ content, setContent }) {
                 />
                 <button
                     onClick={handleGenerateContent}
-                    className={`w-1/3 flex items-center justify-center px-3 py-4 mt-2 text-white rounded-xl font-montserrat text-md ${loading ? 'bg-gray-400 cursor-not-allowed' :' bg-blue-600 hover:bg-blue-700'}`}
+                    className={`flex items-center justify-center px-3 py-4 mt-2 text-white rounded-xl font-montserrat text-md ${loading ? 'bg-gray-400 cursor-not-allowed' :' bg-blue-600 hover:bg-blue-700'}`}
                 >
                     {loading ? (<> Generating Content <SyncLoader className='ml-2' size={5} color='#ffffff' /></>): (<>Generate Content <FontAwesomeIcon icon={faWandMagicSparkles} className="ml-2" />'</>)}
                     
