@@ -1,15 +1,16 @@
-import React from 'react';
 import Navbar from './components/Navbar';
 import Landing from './components/Landing';
-import Generation from './components/Generation'
+import Timeline from './components/Timeline';
 function App() {
   return (
     <div className="flex flex-col h-screen">
       <Navbar />
       <div>
+        
         <Landing />
 
-      <Generation/>
+
+        <Timeline/>
     
       </div>
     </div>

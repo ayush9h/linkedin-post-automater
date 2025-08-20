@@ -32,8 +32,8 @@ export default function ImageQuery({image, setImage}){
     return(
         <>
          <h3 className="text-2xl font-bebas">Image Generation</h3>
-         <p className="text-md font-montserrat mt-3 text-gray-500">Generate post image for LinkedIn.</p>
-        <div className="gap-5  mt-3">
+         <p className="text-md font-montserrat mt-1 text-gray-500">Generate post image for LinkedIn.</p>
+        <div className="gap-5  mt-5">
           
           <input
             value={imageQuery}

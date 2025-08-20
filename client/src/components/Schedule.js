@@ -71,9 +71,9 @@ export default function Schedule({ content, selectedDays, setSelectedDays }) {
       <div className="flex flex-row justify-between">
         <h1 className="text-2xl font-bebas mt-10">Choose number of days to schedule</h1>
       </div>
-      <p className="text-md font-montserrat mt-3 text-gray-500">Select the number of days to be active.</p>
+      <p className="text-md font-montserrat mt-1 text-gray-500">Select the number of days to be active.</p>
 
-      <div className="flex flex-row items-center mt-3 gap-3">
+      <div className="flex flex-row items-center mt-5 gap-3">
         <input
           type="number"
           value={selectedDays}
