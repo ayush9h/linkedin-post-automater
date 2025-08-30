@@ -16,13 +16,8 @@ export default function Footer() {
 
             <ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-600 sm:mb-0">
               <li>
-                <a href="#faq" className="hover:underline me-6">
-                  FAQ
-                </a>
-              </li>
-              <li>
                 <a
-                  href="https://github.com/your-repo"
+                  href="https://github.com/ayush9h/linkedin-post-automater"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:underline"
