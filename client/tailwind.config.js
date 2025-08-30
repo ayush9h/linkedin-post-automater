@@ -4,8 +4,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily:{
-        montserrat:["Montserrat","sans-serif"],
-        bebas:["Bebas Neue","sans-serif"]
+        plex: ["IBM Plex Sans", "sans-serif"]
       },
     },
   },
