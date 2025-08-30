@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 
 export default function Navbar() {
   return (
-    <nav className="flex font-plex items-center justify-around px-6 py-3 text-white border-b border-zinc-300">
+    <nav className="flex font-plex items-center justify-around px-6 py-3 bg-zinc-100 text-white border-b border-zinc-300">
       <div>
         <NavLink to="/" className="font-plex text-zinc-700 text-xl">
           Post<span className="font-semibold text-blue-700">.ai</span>
@@ -14,8 +14,8 @@ export default function Navbar() {
         <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-zinc-700 hover:text-zinc-900 font-plex hover:underline transition-all">GitHub</a>
       </div>
       <div>
-        <NavLink to="/generate" className="bg-blue-800 hover:bg-blue-900 transition-all text-zinc-100 text-sm px-4 py-2 rounded-md ">
-          Get Started
+        <NavLink to="/generate" className="bg-blue-800 hover:bg-blue-900 transition-all text-zinc-100 text-sm px-4 py-2 rounded-xl ">
+          Generate for free
         </NavLink>
       </div>
     </nav>

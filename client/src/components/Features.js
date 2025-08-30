@@ -1,17 +1,11 @@
-import { Shield, Upload, Lock, ListChecks } from "lucide-react";
+import {  Upload, ListChecks } from "lucide-react";
 
 const features = [
   {
-    name: "Push to Deploy",
+    name: "Publish faster",
     description:
       "Schedule and publish LinkedIn posts instantly. Focus on your content while we handle the automation.",
     icon: Upload,
-  },
-  {
-    name: "SSL Certificates",
-    description:
-      "Your data and accounts are protected with enterprise-grade security. Trust and privacy come first.",
-    icon: Shield,
   },
   {
     name: "Simple Queues",
@@ -19,12 +13,7 @@ const features = [
       "Plan your week or month in minutes. Our smart queues keep your posts consistent and on time.",
     icon: ListChecks,
   },
-  {
-    name: "Advanced Security",
-    description:
-      "From login protection to encrypted storage, your brand and ideas are safe with us.",
-    icon: Lock,
-  },
+
 ];
 
 export default function Features() {

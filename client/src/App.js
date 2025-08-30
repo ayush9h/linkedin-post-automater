@@ -1,17 +1,17 @@
 import Navbar from './components/Navbar';
 import Landing from './components/Landing';
-import Timeline from './components/Timeline';
 import Features from './components/Features';
+import Footer from './components/Footer';
 function App() {
   return (
-    <div className="flex flex-col h-screen">
+      <>
       <Navbar />
-      <div>
         
-        <Landing />
-        <Features/>
-      </div>
-    </div>
+      <Landing />
+      <Features/>
+
+      <Footer/>
+</>
   );
 }
 

@@ -1,63 +1,100 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import Markdown from 'react-markdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faWandMagicSparkles,
-} from '@fortawesome/free-solid-svg-icons';
-import {SyncLoader} from 'react-spinners'
+import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 
-export default function ContentQuery({ content, setContent }) {
+export default function ContentQuery({ content, setContent, image, setImage }) {
+  const [query, setQuery] = useState('');
+  const [loadingContent, setLoadingContent] = useState(false);
+  const [loadingImage, setLoadingImage] = useState(false);
 
-    const [contentQuery, setContentQuery] = useState('');
-    const [loading, setLoading] = useState(false);
+  const handleGenerateContentAndImage = async () => {
+    try {
+      setLoadingContent(true);
+      const contentResponse = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/generate-content`,
+        { query }
+      );
+      const generatedContent = contentResponse.data.content;
+      setContent(generatedContent);
+      setLoadingContent(false);
 
-    const handleGenerateContent = async () => {
-        setLoading(true);
-        try {
-          const contentResponse = await axios.post(
-            `${process.env.REACT_APP_BACKEND_URL}/api/v1/generate-content`,
-            {
-              query: contentQuery,
-            }
-          );
-          const generatedContent = contentResponse.data.content;
-          setContent(generatedContent);
-          setLoading(false);
-        } catch (error) {
-          console.error('Error generating content:', error);
-        }
-    };
+      setLoadingImage(true);
+      const imageResponse = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/generate-image`,
+        { query },
+        { responseType: 'blob' }
+      );
+      const imageURL = URL.createObjectURL(imageResponse.data);
+      setImage(imageURL);
+      setLoadingImage(false);
+    } catch (error) {
+      setLoadingContent(false);
+      setLoadingImage(false);
+      console.error('Error generating content/image:', error);
+    }
+  };
 
-    return (
-        <>
-            <h3 className="text-2xl font-bebas">Content Generation</h3>
-            <p className="text-md font-montserrat mt-1 text-gray-500">Generate post content for LinkedIn.</p>
-            <div className="gap-5  mt-5">
-
-                <input
-                    value={contentQuery}
-                    onChange={(e) => setContentQuery(e.target.value)}
-                    placeholder="Enter prompt for LinkedIn post content"
-                    className="w-full p-4 mt-2 bg-zinc-100 border-2 border-gray-300 rounded-xl resize-none font-montserrat"
+  return (
+    <>  
+      <div className="relative mt-5">
+        <textarea
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Enter prompt for LinkedIn content & image"
+          rows={6}
+          className="w-full p-5 pr-32 border border-gray-300 rounded-xl resize-none font-plex text-base"
+        />
+        <button
+          onClick={handleGenerateContentAndImage}
+          disabled={loadingContent || loadingImage}
+          className={`absolute bottom-4 right-4 flex items-center justify-center px-5 py-3 rounded-xl font-plex text-sm font-medium shadow-md transition-colors duration-200
+            ${
+              loadingContent || loadingImage
+                ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                : 'bg-blue-700 text-white hover:bg-blue-900'
+            }`}
+        >
+          {loadingContent
+            ? 'Generating Content...'
+            : loadingImage
+            ? 'Generating Image...'
+            : (
+              <>
+                Generate LinkedIn Post
+                <FontAwesomeIcon
+                  icon={faWandMagicSparkles}
+                  className="ml-2 text-white"
                 />
-                <button
-                    onClick={handleGenerateContent}
-                    className={`flex items-center justify-center px-3 py-4 mt-2 text-white rounded-xl font-montserrat text-md ${loading ? 'bg-gray-400 cursor-not-allowed' :' bg-blue-600 hover:bg-blue-700'}`}
-                >
-                    {loading ? (<> Generating Content <SyncLoader className='ml-2' size={5} color='#ffffff' /></>): (<>Generate Content <FontAwesomeIcon icon={faWandMagicSparkles} className="ml-2" />'</>)}
-                    
-                </button>
-              
-            </div>
-            {content && (
-                    <div>
-                        <h4 className="mt-10 text-md font-montserrat font-semibold">Generated Content:</h4>
-                        <Markdown className="mt-4 bg-zinc-100 border border-zinc-300 rounded-xl p-6">
-                            {content}
-                        </Markdown>
-                    </div>
-                )}
-        </>
-    )
+              </>
+            )}
+        </button>
+      </div>
+
+      {content && (
+        <div className="mt-12">
+          <h4 className="text-md font-plex font-semibold">
+            Generated Content:
+          </h4>
+          <div className="mt-3 p-5 bg-zinc-100 rounded-xl font-plex prose">
+            <Markdown>{content}</Markdown>
+          </div>
+        </div>
+      )}
+
+      {image && (
+        <div className="mt-12 h-20">
+          <h4 className="text-md font-plex font-semibold">
+            Generated Image:
+          </h4>
+          <img
+            src={image}
+            alt="Generated Image"
+            className="mt-3 rounded-xl max-w-full shadow-md"
+          />
+        </div>
+      )}
+    </>
+  );
 }

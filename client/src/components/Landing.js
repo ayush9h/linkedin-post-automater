@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom"
 export default function Landing() {
     return (
         <>
@@ -9,6 +10,12 @@ export default function Landing() {
                 <p className="mt-5 text-xl text-slate-600 font-montserrat">
                     Improve your post quality by AI-powered content and image generation
                 </p>
+
+
+                <NavLink to="/generate" className="mt-5 bg-blue-800 hover:bg-blue-900 transition-all text-zinc-100 text-sm px-4 py-2 rounded-xl font-plex">
+                    Generate for free
+                </NavLink>
+
             </div>
 
             
