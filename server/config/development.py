@@ -15,6 +15,7 @@ HUGGINGFACE_API_KEY = os.getenv('HUGGINGFACE_API_KEY')
 EMAIL = os.getenv('EMAIL')
 PASSWORD = os.getenv('PASSWORD')
 REDIS_URL = os.getenv("REDIS_URL")
+PORT = os.getenv("PORT")
 
 # API URLs
 HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-dev"
