@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
     <>
-      <footer className="bg-zinc-100 text-black border-t border-gray-200 font-plex">
+      <footer className="mt-32 bg-zinc-100 text-black border-t border-gray-200 font-plex">
         <div className="max-w-5xl mx-auto p-6 md:py-10">
           <div className="sm:flex sm:items-center sm:justify-between">
 
@@ -9,11 +9,6 @@ export default function Footer() {
               href="/"
               className="flex items-center mb-4 sm:mb-0 space-x-3"
             >
-              <img
-                src="/logo.svg"
-                className="h-8"
-                alt="Post.ai Logo"
-              />
               <span className="self-center text-2xl font-semibold whitespace-nowrap">
                 Post<span className="text-blue-600">.ai</span>
               </span>

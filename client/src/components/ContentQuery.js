@@ -72,27 +72,33 @@ export default function ContentQuery({ content, setContent, image, setImage }) {
         </button>
       </div>
 
-      {content && (
-        <div className="mt-12">
-          <h4 className="text-md font-plex font-semibold">
-            Generated Content:
-          </h4>
-          <div className="mt-3 p-5 bg-zinc-100 rounded-xl font-plex prose">
-            <Markdown>{content}</Markdown>
-          </div>
-        </div>
-      )}
+      {(content || image) && (
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+          {content && (
+            <div className="flex flex-col h-full">
+              <h4 className="text-md font-plex font-semibold">
+                Generated Content:
+              </h4>
+              <div className="mt-3 p-5 bg-zinc-100 rounded-xl font-plex prose flex-1">
+                <Markdown>{content}</Markdown>
+              </div>
+            </div>
+          )}
 
-      {image && (
-        <div className="mt-12 h-20">
-          <h4 className="text-md font-plex font-semibold">
-            Generated Image:
-          </h4>
-          <img
-            src={image}
-            alt="Generated Image"
-            className="mt-3 rounded-xl max-w-full shadow-md"
-          />
+          {image && (
+            <div className="flex flex-col h-full">
+              <h4 className="text-md font-plex font-semibold">
+                Generated Image:
+              </h4>
+              <div className="mt-3 flex-1">
+                <img
+                  src={image}
+                  alt="Generated Image"
+                  className="w-full h-full object-cover rounded-xl shadow-md"
+                />
+              </div>
+            </div>
+          )}
         </div>
       )}
     </>
