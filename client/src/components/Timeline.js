@@ -3,7 +3,7 @@ import ContentQuery from "./ContentQuery";
 import Schedule from "./Schedule";
 
 export default function Timeline() {
-    const [days, setDays] = useState(1);
+    const [days, setDays] = useState(0);
     const [content, setContent] = useState('');
     const [image, setImage] = useState(null);
     

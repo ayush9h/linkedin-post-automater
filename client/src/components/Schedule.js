@@ -67,12 +67,13 @@ export default function Schedule({ content, selectedDays, setSelectedDays }) {
 
       <div className="flex flex-col sm:flex-row items-center gap-3">
         <input
-          type="number"
-          value={selectedDays}
-          onChange={(e) => setSelectedDays(Number(e.target.value))}
-          placeholder="Days"
-          className="flex-1 p-3 border border-gray-300 rounded-xl font-plex text-sm"
-        />
+            type="number"
+            value={selectedDays === 0 ? "" : selectedDays}
+            onChange={(e) => setSelectedDays(Number(e.target.value))}
+            placeholder="Enter the days for the content to be automated"
+            className="flex-1 p-3 border border-gray-300 rounded-xl font-plex text-sm"
+          />
+
         <button
             onClick={schedulePosts}
             disabled={selectedDays < 1}
