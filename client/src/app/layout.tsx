@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Funnel_Display } from "next/font/google";
 import "./globals.css";
+import SessionProviderClient from "./providers/SessionProviderClient";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./lib/auth";
 
 const funnel = Funnel_Display({
   variable: "--font-funnel",
@@ -13,15 +16,19 @@ export const metadata: Metadata = {
   description: "Automate your linkedin easily",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  const session = await getServerSession(authOptions); 
+
   return (
     <html lang="en">
       <body className={`${funnel.variable} antialiased`}>
-        {children}
+        <SessionProviderClient session={session}>
+          {children}
+        </SessionProviderClient>
       </body>
     </html>
   );

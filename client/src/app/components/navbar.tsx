@@ -1,4 +1,6 @@
+"use client"
 import Link from "next/link"
+import SignIn from "./signin"
 export default function Navbar(){
     return(
         <>
@@ -15,10 +17,9 @@ export default function Navbar(){
                     <Link href={"https://github.com/ayush9h/linkedin-post-automater"} className="font-funnel text-sm hover:underline">
                             Github
                     </Link>
- 
-                    <Link href={"/generate"} className="font-funnel text-sm bg-zinc-800 text-zinc-100 px-5 py-2 rounded-full hover:bg-zinc-900 transition-all ">
-                            Get Started
-                    </Link>
+
+                    <SignIn/>
+                    
                 </div>
 
             </nav>

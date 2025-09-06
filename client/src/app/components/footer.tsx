@@ -18,8 +18,6 @@ export default function Footer() {
               <li>
                 <a
                   href="https://github.com/ayush9h/linkedin-post-automater"
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="hover:underline"
                 >
                   GitHub
