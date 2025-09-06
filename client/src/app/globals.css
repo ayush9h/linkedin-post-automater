@@ -5,3 +5,7 @@
   --font-funnel: var(--font-funnel);
 }
 
+
+html{
+  background-color: oklch(0.96 0 264);
+}
