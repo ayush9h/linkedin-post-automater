@@ -1,8 +1,15 @@
+'use client'
 import SignIn from "./signin"
 import Image from "next/image"
 import Features from "./features"
 
+import { useSession } from "next-auth/react"
+import Link from "next/link"
+
 export default function Landing() {
+
+  const {data:session} = useSession()
+
   return (
     <>
       <div className="flex flex-col justify-around items-center content-center max-w-xl mx-auto md:max-w-6xl lg:max-w-7xl mt-20">
@@ -18,10 +25,15 @@ export default function Landing() {
               </p>
         </div>
 
-        <div  className="mt-5">
+        {session ? (
+          <Link href={"/createPage"}  className="font-funnel text-sm bg-zinc-800 text-zinc-100 px-5 py-2 rounded-full hover:bg-zinc-900 cursor-pointer transition-all mt-5">
+               Go to your account
+          </Link>
+        ):(
+          <div  className="mt-5">
             <SignIn/>
-        </div>
-
+          </div>
+        )}
 
         <Image src={"/demo.png"}
             alt="Demo Image"

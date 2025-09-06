@@ -28,7 +28,7 @@ export default function Navbar() {
           </Link>
 
           <Menu as="div" className="relative inline-block text-left">
-            <MenuButton className="inline-flex items-center gap-2 rounded-full p-1 bg-zinc-200 text-sm font-semibold text-zinc-800 shadow-inner shadow-white/10 cursor-pointer hover:bg-zinc-300">
+            <MenuButton className="inline-flex items-center gap-2 rounded-full p-1 bg-zinc-100 text-sm font-semibold text-zinc-800 shadow-inner shadow-white/10 cursor-pointer hover:bg-zinc-200">
               <Image
                 alt="Profile"
                 src={session.user?.image as string}
@@ -45,7 +45,7 @@ export default function Navbar() {
             >
               <MenuItem>
                 <Link
-                  href="/generate"
+                  href="/createPage"
                   className="group flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-zinc-200"
                 >
                   <PlusCircle size={18} />
