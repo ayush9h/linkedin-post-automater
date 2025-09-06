@@ -2,6 +2,7 @@ import asyncio
 import logging
 from datetime import datetime, timedelta
 
+import requests
 from celery.result import AsyncResult
 from celery_app import celery
 from config.development import PORT
@@ -50,17 +51,25 @@ def post_linkedin_route():
     try:
         request_data = request.get_json()
         generated_content = request_data.get('generated_content')
-        image_path = request_data.get('image_path')
+        image_path = None
+        access_token = request_data.get("access_token")
         delay = request_data.get("delay", 0)
+
+        profile_resp = requests.get(
+            "https://api.linkedin.com/v2/userinfo",
+            headers={"Authorization": f"Bearer {access_token}"},
+        )
+        profile_data = profile_resp.json()
+        user_urn = f"urn:li:person:{profile_data['sub']}"
 
         if delay > 0:
             eta = datetime.now() + timedelta(minutes=delay)
             job = publish_linkedin_post.apply_async(
-                args=[generated_content, image_path], eta=eta
+                args=[generated_content, image_path, user_urn, access_token], eta=eta
             )
         else:
             job = publish_linkedin_post.apply_async(
-                args=[generated_content, image_path]
+                args=[generated_content, image_path, user_urn, access_token]
             )
         return (
             jsonify(
@@ -95,5 +104,6 @@ def check_task_status(task_id):
 
 
 if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=PORT)
     app.run(debug=True, host="0.0.0.0", port=PORT)
     app.run(debug=True, host="0.0.0.0", port=PORT)

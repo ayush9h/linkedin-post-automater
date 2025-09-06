@@ -35,32 +35,39 @@ def upload_image(image_path):
     return image_asset
 
 
-def post_to_linkedin(content, image_path=None):
-    HEADERS = get_headers(content_type="application/octet-stream")
-    image_asset = upload_image(image_path)
+def post_to_linkedin(
+    content,
+    user_urn,
+    access_token,
+    image_path=None,
+):
+
+    HEADERS = {
+        "Authorization": f"Bearer {access_token}",
+        "Content-Type": "application/octet-stream",
+    }
 
     post_data = {
-        "author": PERSON_URN_KEY,
+        "author": user_urn,
         "lifecycleState": "PUBLISHED",
         "specificContent": {
             "com.linkedin.ugc.ShareContent": {
                 "shareCommentary": {"text": content},
-                "shareMediaCategory": "NONE" if not image_asset else "IMAGE",
+                "shareMediaCategory": "NONE",
             },
         },
         "visibility": {"com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"},
     }
 
-    if image_asset:
-        post_data["specificContent"]["com.linkedin.ugc.ShareContent"]["media"] = [
-            {
-                "status": "READY",
-                "description": {"text": content},
-                "media": image_asset,
-                "title": {"text": "LinkedIn Post"},
-            }
-        ]
+    # if image_asset:
+    #     post_data["specificContent"]["com.linkedin.ugc.ShareContent"]["media"] = [
+    #         {
+    #             "status": "READY",
+    #             "description": {"text": content},
+    #             "media": image_asset,
+    #             "title": {"text": "LinkedIn Post"},
+    #         }
+    #     ]
 
     response = requests.post(POST_URL, json=post_data, headers=HEADERS)
-    response.raise_for_status()
     return response.json()

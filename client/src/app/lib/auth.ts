@@ -8,7 +8,7 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.AUTH_LINKEDIN_SECRET as string,
       issuer: "https://www.linkedin.com",
       authorization: {
-        params: { scope: "openid profile email" },
+        params: { scope: "openid profile w_member_social email" },
       },
       wellKnown: "https://www.linkedin.com/oauth/.well-known/openid-configuration",
       profile: (profile: LinkedInProfile) => ({
@@ -19,5 +19,18 @@ export const authOptions: NextAuthOptions = {
         }),
     }),
   ],
+  callbacks: {
+    async jwt({ token, account }) {
+      if (account) {
+        token.accessToken = account.access_token
+      }
+      return token
+    },
+    
+    async session({ session, token }) {
+      session.accessToken = token.accessToken as string
+      return session
+    },
+  },
   secret: process.env.NEXTAUTH_SECRET,
 };
