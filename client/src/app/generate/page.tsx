@@ -1,24 +1,13 @@
 "use client"
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import Navbar from "../components/navbar";
 export default function Generate(){
 
-    const { data: session, status } = useSession();
-
-    if (status === "loading") {
-      return <p>Loading...</p>;
-    }
+    const { data: session } = useSession();
 
     if (session) {
       return (
-        <div>
-          <p>Signed in as {session.user?.email}</p>
-          <button onClick={() => signOut({callbackUrl:'/'})}>Sign out</button>
-        </div>
+        <Navbar/>
       );
     }
-    return(
-        <>
-            <h1>Logging you in the application</h1>
-        </>
-    )
 }
