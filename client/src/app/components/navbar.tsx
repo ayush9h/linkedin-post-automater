@@ -36,7 +36,7 @@ export default function Navbar() {
                 width={30}
                 className="rounded-full"
               />
-              <ChevronDown className="mr-1" size={18} />
+              <ChevronDown className="mr-1" size={16} />
             </MenuButton>
 
             <MenuItems
@@ -48,7 +48,7 @@ export default function Navbar() {
                   href="/createPage"
                   className="group flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-zinc-200"
                 >
-                  <PlusCircle size={18} />
+                  <PlusCircle size={16} />
                   Create Post
                 </Link>
               </MenuItem>
@@ -59,7 +59,7 @@ export default function Navbar() {
                   aria-disabled={true}
                   className="group flex w-full i cursor-not-allowed tems-center gap-2 rounded-lg px-3 py-2 hover:bg-zinc-200"
                 >
-                  <LayoutDashboard size={18} />
+                  <LayoutDashboard size={16} />
                   Dashboard
                 </Link>
               </MenuItem>
@@ -69,7 +69,7 @@ export default function Navbar() {
                   onClick={() => signOut({ callbackUrl: "/" })}
                   className="group flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-red-100 text-red-700 cursor-pointer"
                 >
-                  <LogOut size={18} />
+                  <LogOut size={16} />
                   Sign out
                 </button>
               </MenuItem>
