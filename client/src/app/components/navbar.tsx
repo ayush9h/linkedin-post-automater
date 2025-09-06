@@ -56,7 +56,8 @@ export default function Navbar() {
               <MenuItem>
                 <Link
                   href="/dashboard"
-                  className="group flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-zinc-200"
+                  aria-disabled={true}
+                  className="group flex w-full i cursor-not-allowed tems-center gap-2 rounded-lg px-3 py-2 hover:bg-zinc-200"
                 >
                   <LayoutDashboard size={18} />
                   Dashboard

@@ -1,9 +1,10 @@
 'use client'
 import { Wand2, CalendarClock } from "lucide-react"
 import { useState } from "react"
-import axios from "axios"
 import Markdown from "react-markdown"
 import { useSession } from "next-auth/react"
+import { toast,Toaster } from "sonner"
+
 export default function Generate() {
 
   const {data:session} = useSession()
@@ -15,34 +16,41 @@ export default function Generate() {
 
   const handleGeneration = async () => {
     try {
-      const contentResponse = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/generate-content`,
-        { query }
-      )
-      setContent(contentResponse.data.content)
+      const contentResponse = await fetch("/api/generate-content",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({query})
+      })
+
+      const data = await contentResponse.json()
+      setContent(data.content)
+      toast.success("Content Generated Successfully")
     } catch (error) {
-      console.log(error)
+        console.log(error)
+        toast.error("Failed to generate content")
     }
   }
 
   const schedulePosts = async () => {
     try {
-      
-
-      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/post-linkedin`, {
-        generated_content: content,
-        delay: 0,
-        access_token: session?.accessToken
+       await fetch("/api/schedule-post", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content,
+          accessToken: session?.accessToken,
+        }),
       })
-
-      alert("Post scheduled successfully")
+      toast.success("Post scheduled successfully.")
     } catch (err) {
       console.log(err)
+      toast.error("Failed to schedule post")
     }
   }
 
   return (
     <>
+      <Toaster position="top-center"/>
       <div className="max-w-5xl mx-auto relative mt-5 font-funnel">
         <textarea
           value={query}
