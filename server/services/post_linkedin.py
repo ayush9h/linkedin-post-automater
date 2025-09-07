@@ -1,18 +1,26 @@
 import requests
-from config.development import LINKEDIN_API_URL, PERSON_URN_KEY, get_headers
+from config.development import LINKEDIN_API_URL, get_headers
 
 ASSETS_REGISTER_UPLOAD_URL = f"{LINKEDIN_API_URL}/assets?action=registerUpload" 
 POST_URL = f"{LINKEDIN_API_URL}/ugcPosts" 
 
-def upload_image(image_path):
+
+def upload_image(
+    image_path,
+    user_urn,
+    access_token,
+):
     if not image_path:
         return None
 
-    HEADERS = get_headers() 
+    HEADERS = {
+        "Authorization": f"Bearer {access_token}",
+        "Content-Type": "application/octet-stream",
+    }
     data = {
         "registerUploadRequest": {
             "recipes": ["urn:li:digitalmediaRecipe:feedshare-image"],
-            "owner": PERSON_URN_KEY,
+            "owner": user_urn,
             "serviceRelationships": [
                 {
                     "relationshipType": "OWNER",
@@ -41,6 +49,11 @@ def post_to_linkedin(
     access_token,
     image_path=None,
 ):
+    image_asset = upload_image(
+        image_path=image_path,
+        user_urn=user_urn,
+        access_token=access_token,
+    )
 
     HEADERS = {
         "Authorization": f"Bearer {access_token}",
@@ -59,15 +72,15 @@ def post_to_linkedin(
         "visibility": {"com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"},
     }
 
-    # if image_asset:
-    #     post_data["specificContent"]["com.linkedin.ugc.ShareContent"]["media"] = [
-    #         {
-    #             "status": "READY",
-    #             "description": {"text": content},
-    #             "media": image_asset,
-    #             "title": {"text": "LinkedIn Post"},
-    #         }
-    #     ]
+    if image_asset:
+        post_data["specificContent"]["com.linkedin.ugc.ShareContent"]["media"] = [
+            {
+                "status": "READY",
+                "description": {"text": content},
+                "media": image_asset,
+                "title": {"text": "LinkedIn Post"},
+            }
+        ]
 
     response = requests.post(POST_URL, json=post_data, headers=HEADERS)
     return response.json()
