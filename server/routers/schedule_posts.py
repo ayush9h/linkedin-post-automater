@@ -16,7 +16,7 @@ async def schedule_post(request: ScheduleRequest):
     profile_data = profile_resp.json()
     user_urn = f"urn:li:person:{profile_data['sub']}"
 
-    schedule = 10
+    schedule = request.delay * 86400
 
     entry = RedBeatSchedulerEntry(
         name=f"linkedin-post-every-{schedule}-secs",
