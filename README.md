@@ -154,10 +154,17 @@ The **LinkedIn Post Automation** system automates the entire process of content 
      - Similarly, the backend generates a **custom image** using AI models.
      - The frontend receives the **generated content** (text) and **image** (as PNG).
 
+
+<img width="1541" height="853" alt="image" src="https://github.com/user-attachments/assets/036e2de9-836c-4846-813b-2155f2ff5b0e" />
+
 ### 2. **Combining Content and Image**
    - **Frontend**: The user can review the generated LinkedIn post and image.
    - **System Response**:
      - The frontend then sends the **final content** (post text) and **image file** (PNG) to the backend for posting to LinkedIn.
+
+
+<img width="1511" height="829" alt="image" src="https://github.com/user-attachments/assets/36c79180-5e14-41a5-9333-9d894d8e2f29" />
+
 
 ### 3. **Posting to LinkedIn**
    - **Backend Process**:
@@ -169,8 +176,16 @@ The **LinkedIn Post Automation** system automates the entire process of content 
        - **Post Creation**:
          - The backend then uses the **LinkedIn API's "Share on LinkedIn" endpoint** to create a post. The request includes the **post content** and the **image asset ID**.
          - The backend successfully creates the post and returns a **confirmation message** with the LinkedIn post details (URL, post ID).
-   
+
+
+<img width="1409" height="825" alt="image" src="https://github.com/user-attachments/assets/6d9ebb8a-dffe-4fed-830a-5dad08a592de" />
+
    - **System Response**: The frontend shows a success notification, confirming that the post has been successfully uploaded to LinkedIn.
+
+
+
+<img width="1071" height="705" alt="image" src="https://github.com/user-attachments/assets/638ec888-146d-483c-9eaa-429bb13c7e48" />
+
 
 
 ### Summary of Flow:
