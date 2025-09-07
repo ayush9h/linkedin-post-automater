@@ -12,7 +12,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 REDIS_URL = os.getenv("REDIS_URL")
 PORT = os.getenv("PORT")
 LINKEDIN_API_URL = "https://api.linkedin.com/v2"
-
+ORIGINS = os.getenv("ORIGINS")
 
 model_client = OpenAIChatCompletionClient(
     model="openai/gpt-oss-20b",

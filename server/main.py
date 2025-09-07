@@ -1,3 +1,4 @@
+from config.development import ORIGINS
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import generate_content, generate_image, schedule_posts
@@ -7,6 +8,7 @@ app = FastAPI()
 origins = [
     "http://localhost",
     "http://localhost:3000",
+    ORIGINS,
 ]
 
 app.add_middleware(
