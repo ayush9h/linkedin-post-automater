@@ -25,4 +25,5 @@ app.include_router(generate_content.router, prefix="/api/v1", tags=["Content"])
 app.include_router(schedule_posts.router, prefix="/api/v1", tags=["Schedule"])
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=PORT, reload=True)
+    port = int(PORT) if PORT else 5000
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
