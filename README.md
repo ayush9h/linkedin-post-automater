@@ -33,6 +33,61 @@ LinkedIn Post Automation is an application designed to automate the process of c
   - `requests`: For HTTP requests.
 
 
+## Project Flow
+
+The **LinkedIn Post Automation** system automates the entire process of content creation, image generation, and posting to LinkedIn. Here’s how it works:
+
+### 1. **User Input and Content Generation**
+   - **Frontend**: The user provides a **LinkedIn post topic** (text-based prompt) on the NextJs interface. 
+   - **System Response**:
+     - The frontend sends a request to the backend to generate the **LinkedIn post content** and **custom image**. 
+     - The backend calls the **AI model APIs (GROQ, Gemini)** to generate the content based on the input topic.
+     - Similarly, the backend generates a **custom image** using AI models.
+     - The frontend receives the **generated content** (text) and **image** (as PNG).
+
+
+<img width="1541" height="853" alt="image" src="https://github.com/user-attachments/assets/036e2de9-836c-4846-813b-2155f2ff5b0e" />
+
+### 2. **Combining Content and Image**
+   - **Frontend**: The user can review the generated LinkedIn post and image.
+   - **System Response**:
+     - The frontend then sends the **final content** (post text) and **image file** (PNG) to the backend for posting to LinkedIn.
+
+
+<img width="1511" height="829" alt="image" src="https://github.com/user-attachments/assets/36c79180-5e14-41a5-9333-9d894d8e2f29" />
+
+
+### 3. **Posting to LinkedIn**
+   - **Backend Process**:
+     - The backend uses the **LinkedIn API** to upload the image and post the content.
+     - The process includes two main steps:
+       - **Image Upload**:
+         - The backend uploads the image to LinkedIn using the `POST /assets` endpoint of the LinkedIn API. This creates a new image asset on LinkedIn.
+         - The API responds with an **asset ID** (a unique identifier for the image).
+       - **Post Creation**:
+         - The backend then uses the **LinkedIn API's "Share on LinkedIn" endpoint** to create a post. The request includes the **post content** and the **image asset ID**.
+         - The backend successfully creates the post and returns a **confirmation message** with the LinkedIn post details (URL, post ID).
+
+
+<img width="1409" height="825" alt="image" src="https://github.com/user-attachments/assets/6d9ebb8a-dffe-4fed-830a-5dad08a592de" />
+
+   - **System Response**: The frontend shows a success notification, confirming that the post has been successfully uploaded to LinkedIn.
+
+
+
+<img width="1071" height="705" alt="image" src="https://github.com/user-attachments/assets/638ec888-146d-483c-9eaa-429bb13c7e48" />
+
+
+
+### Summary of Flow:
+
+1. **Frontend**: User inputs a post topic and image description → Sends request to backend.
+2. **Backend**:
+   - Generates post content (AI-powered).
+   - Generates a custom image (AI-powered).
+3. **Image Upload**: Backend uploads the generated image to LinkedIn via the `POST /assets` endpoint and receives an image asset ID.
+4. **Post Creation**: Backend creates a LinkedIn post using the content and image asset ID → Post is uploaded to LinkedIn.
+
 ### **AI Models and Services**
 - **LLM Provider**: Groq and Gemini
 - **Models**: GPT-oss and Gemini-flash-preview models
@@ -141,61 +196,6 @@ LinkedIn Post Automation is an application designed to automate the process of c
   }
   ```
 
-
-## Project Flow
-
-The **LinkedIn Post Automation** system automates the entire process of content creation, image generation, and posting to LinkedIn. Here’s how it works:
-
-### 1. **User Input and Content Generation**
-   - **Frontend**: The user provides a **LinkedIn post topic** (text-based prompt) on the NextJs interface. 
-   - **System Response**:
-     - The frontend sends a request to the backend to generate the **LinkedIn post content** and **custom image**. 
-     - The backend calls the **AI model APIs (GROQ, Gemini)** to generate the content based on the input topic.
-     - Similarly, the backend generates a **custom image** using AI models.
-     - The frontend receives the **generated content** (text) and **image** (as PNG).
-
-
-<img width="1541" height="853" alt="image" src="https://github.com/user-attachments/assets/036e2de9-836c-4846-813b-2155f2ff5b0e" />
-
-### 2. **Combining Content and Image**
-   - **Frontend**: The user can review the generated LinkedIn post and image.
-   - **System Response**:
-     - The frontend then sends the **final content** (post text) and **image file** (PNG) to the backend for posting to LinkedIn.
-
-
-<img width="1511" height="829" alt="image" src="https://github.com/user-attachments/assets/36c79180-5e14-41a5-9333-9d894d8e2f29" />
-
-
-### 3. **Posting to LinkedIn**
-   - **Backend Process**:
-     - The backend uses the **LinkedIn API** to upload the image and post the content.
-     - The process includes two main steps:
-       - **Image Upload**:
-         - The backend uploads the image to LinkedIn using the `POST /assets` endpoint of the LinkedIn API. This creates a new image asset on LinkedIn.
-         - The API responds with an **asset ID** (a unique identifier for the image).
-       - **Post Creation**:
-         - The backend then uses the **LinkedIn API's "Share on LinkedIn" endpoint** to create a post. The request includes the **post content** and the **image asset ID**.
-         - The backend successfully creates the post and returns a **confirmation message** with the LinkedIn post details (URL, post ID).
-
-
-<img width="1409" height="825" alt="image" src="https://github.com/user-attachments/assets/6d9ebb8a-dffe-4fed-830a-5dad08a592de" />
-
-   - **System Response**: The frontend shows a success notification, confirming that the post has been successfully uploaded to LinkedIn.
-
-
-
-<img width="1071" height="705" alt="image" src="https://github.com/user-attachments/assets/638ec888-146d-483c-9eaa-429bb13c7e48" />
-
-
-
-### Summary of Flow:
-
-1. **Frontend**: User inputs a post topic and image description → Sends request to backend.
-2. **Backend**:
-   - Generates post content (AI-powered).
-   - Generates a custom image (AI-powered).
-3. **Image Upload**: Backend uploads the generated image to LinkedIn via the `POST /assets` endpoint and receives an image asset ID.
-4. **Post Creation**: Backend creates a LinkedIn post using the content and image asset ID → Post is uploaded to LinkedIn.
 
 
 ## Usage
