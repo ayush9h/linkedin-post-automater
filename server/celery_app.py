@@ -7,8 +7,9 @@ def make_celery():
         "linkedin_tasks",
         broker=REDIS_URL,
         backend=REDIS_URL,
+        beat_scheduler="redbeat.RedBeatScheduler",
     )
 
 
 celery = make_celery()
-import tasks.task
+import tasks

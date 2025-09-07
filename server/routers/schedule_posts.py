@@ -1,19 +1,13 @@
-import base64
-from datetime import datetime, timedelta
-
 import requests
+from celery_app import celery
 from fastapi import APIRouter
 from models.schedule import ScheduleRequest
-from tasks.task import publish_linkedin_post
+from redbeat import RedBeatSchedulerEntry
 
 router = APIRouter()
 
 
-@router.post(
-    "/post-linkedin",
-    status_code=200,
-    response_description="Response containing the post content",
-)
+@router.post("/post-linkedin", status_code=200)
 async def schedule_post(request: ScheduleRequest):
     profile_resp = requests.get(
         "https://api.linkedin.com/v2/userinfo",
@@ -22,19 +16,15 @@ async def schedule_post(request: ScheduleRequest):
     profile_data = profile_resp.json()
     user_urn = f"urn:li:person:{profile_data['sub']}"
 
-    image_bytes = None
-    if request.image_base64:
-        image_bytes = base64.b64decode(request.image_base64)
+    schedule = 10
 
-    if request.delay > 0:
-        eta = datetime.now() + timedelta(minutes=request.delay)
-        job = publish_linkedin_post.apply_async(
-            args=[request.content, image_bytes, user_urn, request.access_token],
-            eta=eta,
-        )
-    else:
-        job = publish_linkedin_post.apply_async(
-            args=[request.content, image_bytes, user_urn, request.access_token]
-        )
+    entry = RedBeatSchedulerEntry(
+        name=f"linkedin-post-every-{schedule}-secs",
+        task="publish_linkedin_post",
+        schedule=schedule,
+        args=[request.content, request.image_base64, user_urn, request.access_token],
+        app=celery,
+    )
+    entry.save()
 
-    return {"status": "success", "job_id": job.id}
+    return {"status": "success"}

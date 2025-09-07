@@ -37,7 +37,7 @@ export default function Landing() {
 
         <Image src={"/demo.png"}
             alt="Demo Image"
-            width={900} height={800} className="mt-15 border border-zinc-300 rounded-3xl">
+            width={1024} height={768} className="mt-15 border border-zinc-300 rounded-3xl">
         </Image>
 
         <Features/>
