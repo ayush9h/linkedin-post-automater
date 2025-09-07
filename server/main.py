@@ -1,5 +1,5 @@
 import uvicorn
-from config.development import ORIGINS
+from config.development import ORIGINS, PORT
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import generate_content, generate_image, schedule_posts
@@ -25,4 +25,4 @@ app.include_router(generate_content.router, prefix="/api/v1", tags=["Content"])
 app.include_router(schedule_posts.router, prefix="/api/v1", tags=["Schedule"])
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=PORT, reload=True)
