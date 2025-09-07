@@ -1,15 +1,13 @@
 # LinkedIn Post Automation
 
-> [!IMPORTANT]  
-> Use with caution, LinkedIn account linked with the application.
-
 ## Overview
 
-LinkedIn Post Automation is a comprehensive application designed to automate the process of creating, enhancing, and posting content on LinkedIn. Leveraging AI-powered tools for content generation, image creation, and sentiment analysis, this project enables users to optimize their LinkedIn posts for maximum engagement and professionalism.
+LinkedIn Post Automation is an application designed to automate the process of creating, and posting content on LinkedIn. Leveraging AI-powered tools for content generation, and image generation, this project enables users to optimize their LinkedIn posts for maximum engagement and professionalism.
 
----
+
 ## Architecture
-<img width="1476" height="787" alt="image" src="https://github.com/user-attachments/assets/ee1cd30d-d9b6-4fa0-a7d5-32c45ac6c4f5" />
+<img width="1919" height="461" alt="image" src="https://github.com/user-attachments/assets/9eedb1a7-3417-4acc-aac7-51df6eb488a2" />
+
 
 ## Features
 
@@ -17,44 +15,41 @@ LinkedIn Post Automation is a comprehensive application designed to automate the
 2. **Custom Image Creation**: Generate high-quality, AI-designed images based on user prompts.
 3. **Automated Posting**: Schedule and post content directly to LinkedIn for multiple days.
 
----
 
 ## Tech Stack
 
 ### **Frontend**
-- **Framework**: React
+- **Framework**: NextJs
 - **Styling**: Tailwind CSS
 - **Libraries**:
   - `react-markdown`: For rendering Markdown content.
-  - `@fortawesome/react-fontawesome`: For icons.
+  - `@lucide-react`: For icons.
 
 ### **Backend**
-- **Framework**: Flask
+- **Framework**: FastAPI, Redis, Celery
 - **Languages**: Python
 - **APIs and Libraries**:
   - `linkedin-api`: For LinkedIn API interactions.
   - `requests`: For HTTP requests.
-  - `Pillow`: For image processing.
+
 
 ### **AI Models and Services**
-- **LLM Provider**: GROQ API and Hugging Face API
-- **Models**: Gemma2-9B-IT, Black Forest Labs Flux
+- **LLM Provider**: Groq and Gemini
+- **Models**: GPT-oss and Gemini-flash-preview models
 - **Agents**: Autogen agents for text and image generation.
 
 ### **Deployment**
 - **Frontend**: Deployed on Vercel.
 - **Backend**: Hosted on Render.
-- **Database**: Not applicable; ephemeral data.
+- **Database**: Redis for storing the scheduled posts.
 
----
 
 ## Setup Guide
 
 ### Prerequisites
 - Node.js (>= 16.x)
 - Python (>= 3.8)
-- Pipenv or virtualenv
-- Docker (optional for containerized deployment)
+- Redis Insights
 
 ### **Frontend**
 1. Navigate to the client folder:
@@ -82,19 +77,22 @@ LinkedIn Post Automation is a comprehensive application designed to automate the
    ```
 3. Create a `.env` file and add the following keys:
    ```env
-   GROQ_API_KEY=<your_api_key>
-   PERSON_URN_KEY=<your_linkedIn_urn>
-   ACCESS_TOKEN=<your_access_token>
-   HUGGINGFACE_API_KEY=<your_huggingface_api_key>
-   EMAIL=<linkedin_account_email>
-   PASSWORD=<linkedin_account_password>
+    GROQ_API_KEY=<Your-api-key>
+    REDIS_URL=<Your-redis-url>
+    PORT=5000
+    GEMINI_API_KEY=<Your-gemini-key>
+    ORIGINS=<Your-frontend-endpoint>
    ```
-4. Run the server:
+4. Run the main server:
    ```bash
-   flask run
+   python main.py
    ```
+5. Run the Celery Worker and Redbeat Scheduler in separate terminals:
+    ```bash
+    celery -A celery_app.celery beat --loglevel=info --scheduler redbeat.RedBeatScheduler
 
----
+    celery -A celery_app worker --loglevel=info --pool=solo
+    ```
 
 ## API Endpoints
 
@@ -123,7 +121,7 @@ LinkedIn Post Automation is a comprehensive application designed to automate the
     "query": "Professional AI-powered image with technology theme"
   }
   ```
-- **Response**: Returns a `.png` image.
+- **Response**: Returns image in bytes.
 
 ### **3. Post to LinkedIn**
 - **URL**: `/api/v1/post-linkedin`
@@ -132,7 +130,7 @@ LinkedIn Post Automation is a comprehensive application designed to automate the
   ```json
   {
     "generated_content": "<LinkedIn post content>",
-    "image_path": "generated_image.png"
+    "image_path": bytes
   }
   ```
 - **Response**:
@@ -143,39 +141,21 @@ LinkedIn Post Automation is a comprehensive application designed to automate the
   }
   ```
 
-### **4. Sentiment Analysis**
-- **URL**: `/api/v1/post-analysis`
-- **Method**: `GET`
-- **Query Params**:
-  ```json
-  {
-    "post_url": "<LinkedIn post URL>"
-  }
-  ```
-- **Response**:
-  ```json
-  {
-    "status": "success",
-    "analysis": "Sentiment breakdown and insights."
-  }
-  ```
-
----
 
 ## Project Flow
 
 The **LinkedIn Post Automation** system automates the entire process of content creation, image generation, and posting to LinkedIn. Here’s how it works:
 
 ### 1. **User Input and Content Generation**
-   - **Frontend**: The user provides a **LinkedIn post topic** (text-based prompt) and an **image description** on the React frontend interface.
+   - **Frontend**: The user provides a **LinkedIn post topic** (text-based prompt) on the NextJs interface. 
    - **System Response**:
      - The frontend sends a request to the backend to generate the **LinkedIn post content** and **custom image**. 
-     - The backend calls the **AI model APIs (GROQ, Hugging Face)** to generate the content based on the input topic.
+     - The backend calls the **AI model APIs (GROQ, Gemini)** to generate the content based on the input topic.
      - Similarly, the backend generates a **custom image** using AI models.
      - The frontend receives the **generated content** (text) and **image** (as PNG).
 
 ### 2. **Combining Content and Image**
-   - **Frontend**: The user can review the generated LinkedIn post and image. Optionally, they can edit the text or adjust the image description.
+   - **Frontend**: The user can review the generated LinkedIn post and image.
    - **System Response**:
      - The frontend then sends the **final content** (post text) and **image file** (PNG) to the backend for posting to LinkedIn.
 
@@ -192,14 +172,6 @@ The **LinkedIn Post Automation** system automates the entire process of content 
    
    - **System Response**: The frontend shows a success notification, confirming that the post has been successfully uploaded to LinkedIn.
 
-### 4. **Sentiment Analysis**
-   - **User Action**: After the post is live on LinkedIn, the user may want to analyze the comments and reactions to the post.
-   - **System Response**:
-     - The user provides the **LinkedIn post URL** to the frontend, which sends it to the backend for sentiment analysis.
-     - The backend uses sentiment analysis models to evaluate the **comments** on the LinkedIn post.
-     - The backend responds with a detailed **sentiment breakdown**, identifying the **positive**, **negative**, and **neutral** tones of the post’s engagement.
-
----
 
 ### Summary of Flow:
 
@@ -210,7 +182,6 @@ The **LinkedIn Post Automation** system automates the entire process of content 
 3. **Image Upload**: Backend uploads the generated image to LinkedIn via the `POST /assets` endpoint and receives an image asset ID.
 4. **Post Creation**: Backend creates a LinkedIn post using the content and image asset ID → Post is uploaded to LinkedIn.
 
----
 
 ## Usage
 
@@ -227,7 +198,6 @@ The **LinkedIn Post Automation** system automates the entire process of content 
    - Post directly to your LinkedIn account.
 
 
----
 
 ## Contribution
 Feel free to contribute by:
@@ -235,7 +205,6 @@ Feel free to contribute by:
 - Suggesting features
 - Submitting pull requests
 
----
 
 ## License
 This project is licensed under the MIT License.
