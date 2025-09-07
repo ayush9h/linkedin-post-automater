@@ -4,7 +4,7 @@ import { useState } from "react"
 import Markdown from "react-markdown"
 import { useSession } from "next-auth/react"
 import { toast, Toaster } from "sonner"
-import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
+import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react'
 
 export default function Generate() {
   const { data: session } = useSession()

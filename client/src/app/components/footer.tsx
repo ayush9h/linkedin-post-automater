@@ -16,22 +16,20 @@ export default function Footer() {
 
             <ul className="flex gap-6 flex-wrap items-center mb-6 text-sm font-medium text-zinc-600 sm:mb-0">
               <li>
-                <a
-                  href="https://github.com/ayush9h/linkedin-post-automater"
+                <Link
+                  href={"https://github.com/ayush9h/linkedin-post-automater"}
                   className="hover:underline"
                 >
                   GitHub
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="https://github.com/ayush9h/linkedin-post-automater"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href={"https://github.com/ayush9h/linkedin-post-automater"}
                   className="hover:underline"
                 >
                   Privacy Policy
-                </a>
+                </Link>
               </li>
              
             </ul>
@@ -40,9 +38,9 @@ export default function Footer() {
           <hr className="my-6 border-zinc-200 sm:mx-auto lg:my-8" />
           <span className="block text-sm text-zinc-500 sm:text-center">
             © {new Date().getFullYear()}{" "}
-            <a href="/" className="hover:underline">
+            <Link href={"/"} className="hover:underline">
               Post.ai
-            </a>
+            </Link>
             . All Rights Reserved.
           </span>
         </div>
