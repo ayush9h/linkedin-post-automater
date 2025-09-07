@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import generate_content, generate_image
+from routers import generate_content, generate_image, schedule_posts
 
 app = FastAPI()
 
@@ -19,3 +19,4 @@ app.add_middleware(
 
 app.include_router(generate_image.router, prefix="/api/v1", tags=["Image"])
 app.include_router(generate_content.router, prefix="/api/v1", tags=["Content"])
+app.include_router(schedule_posts.router, prefix="/api/v1", tags=["Schedule"])

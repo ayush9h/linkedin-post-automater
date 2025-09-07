@@ -3,7 +3,7 @@ from services.post_linkedin import post_to_linkedin
 
 
 @celery.task(name="publish_linkedin_post")
-def publish_linkedin_post(content, image_path, user_urn, access_token):
+def publish_linkedin_post(content, image_bytes, user_urn, access_token):
     """
     Runs the celery worker
     """
@@ -12,7 +12,7 @@ def publish_linkedin_post(content, image_path, user_urn, access_token):
             content,
             user_urn,
             access_token,
-            image_path,
+            image_bytes,
         )
         return {
             "status": "success",

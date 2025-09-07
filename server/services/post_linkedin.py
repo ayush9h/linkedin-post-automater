@@ -1,21 +1,21 @@
 import requests
-from config.development import LINKEDIN_API_URL, get_headers
+from config.development import LINKEDIN_API_URL
 
 ASSETS_REGISTER_UPLOAD_URL = f"{LINKEDIN_API_URL}/assets?action=registerUpload" 
 POST_URL = f"{LINKEDIN_API_URL}/ugcPosts" 
 
 
 def upload_image(
-    image_path,
+    image_bytes,
     user_urn,
     access_token,
 ):
-    if not image_path:
+    if not image_bytes:
         return None
 
     HEADERS = {
         "Authorization": f"Bearer {access_token}",
-        "Content-Type": "application/octet-stream",
+        "Content-Type": "application/json",
     }
     data = {
         "registerUploadRequest": {
@@ -37,8 +37,13 @@ def upload_image(
     upload_url = res_data["value"]["uploadMechanism"]["com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"]["uploadUrl"]
     image_asset = res_data["value"]["asset"]
 
-    with open(image_path, "rb") as image_file:
-        requests.post(upload_url, data=image_file.read(), headers=HEADERS)
+    headers_octet = {
+        "Authorization": f"Bearer {access_token}",
+        "Content-Type": "application/octet-stream",
+    }
+
+    upload_res = requests.put(upload_url, data=image_bytes, headers=headers_octet)
+    upload_res.raise_for_status()
 
     return image_asset
 
@@ -47,17 +52,21 @@ def post_to_linkedin(
     content,
     user_urn,
     access_token,
-    image_path=None,
+    image_bytes=None,
 ):
-    image_asset = upload_image(
-        image_path=image_path,
-        user_urn=user_urn,
-        access_token=access_token,
+    image_asset = (
+        upload_image(
+            image_bytes=image_bytes,
+            user_urn=user_urn,
+            access_token=access_token,
+        )
+        if image_bytes
+        else None
     )
 
     HEADERS = {
         "Authorization": f"Bearer {access_token}",
-        "Content-Type": "application/octet-stream",
+        "Content-Type": "application/json",
     }
 
     post_data = {
@@ -73,6 +82,9 @@ def post_to_linkedin(
     }
 
     if image_asset:
+        post_data["specificContent"]["com.linkedin.ugc.ShareContent"][
+            "shareMediaCategory"
+        ] = "IMAGE"
         post_data["specificContent"]["com.linkedin.ugc.ShareContent"]["media"] = [
             {
                 "status": "READY",
