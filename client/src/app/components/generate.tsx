@@ -54,7 +54,7 @@ export default function Generate() {
           }),
         })
         if (!res.ok) throw new Error("Failed to schedule post")
-        toast.success("Post scheduled successfully.")
+        toast.success("Post scheduled successfully. Check your Linkedin account.")
       } else {
         toast.error("Image encoding failed")
       }
