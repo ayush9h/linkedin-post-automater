@@ -138,15 +138,13 @@ The **LinkedIn Post Automation** system automates the entire process of content 
     GEMINI_API_KEY=<Your-gemini-key>
     ORIGINS=<Your-frontend-endpoint>
    ```
-4. Run the main server:
+4. Build the docker-compose:
    ```bash
-   python main.py
+   docker-compose build
    ```
-5. Run the Celery Worker and Redbeat Scheduler in separate terminals:
+5. Run the docker-compose file:
     ```bash
-    celery -A celery_app.celery beat --loglevel=info --scheduler redbeat.RedBeatScheduler
-
-    celery -A celery_app worker --loglevel=info --pool=solo
+    docker-compose up
     ```
 
 ## API Endpoints
