@@ -79,7 +79,7 @@ export default function Generate() {
           <textarea
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Enter prompt"
+            placeholder="Enter keywords for the Linkedin post"
             rows={5}
             className="w-full p-5 border border-zinc-300 rounded-xl resize-none font-funnel text-base pr-36"
           />

@@ -1,11 +1,13 @@
-"use client"
 import { useSession } from "next-auth/react";
-import Navbar from "../components/navbar";
+import Navbar from "../components/navbar/navbar";
 import Generate from "../components/generate";
 import Footer from "../components/footer";
-export default function CreatePage(){
 
-    const { data: session } = useSession();
+import { getServerSession } from "next-auth";
+import { authOptions } from "../lib/auth";
+export default async function CreatePage(){
+
+    const session = await getServerSession(authOptions);
 
     if (session) {
       return (
