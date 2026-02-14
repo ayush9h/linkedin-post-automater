@@ -5,6 +5,8 @@ import Markdown from "react-markdown"
 import { useSession } from "next-auth/react"
 import { toast, Toaster } from "sonner"
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react'
+import { Slider } from "@/components/ui/slider";
+
 
 export default function Generate() {
   const { data: session } = useSession()
@@ -14,169 +16,146 @@ export default function Generate() {
   const [open, setOpen] = useState(true)
   const [days, setDays] = useState(1)
 
-  const handleGeneration = async () => {
-    try {
-      toast.info("Content generation started")
-      const contentResponse = await fetch("/api/generate-content", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query })
-      })
-      const data = await contentResponse.json()
-      setContent(data.content)
-      toast.success("Content Generated Successfully")
-
-      toast.info("Image Generation started")
-      const imageResponse = await fetch("/api/generate-image", {
-        method: "POST",
-        body: JSON.stringify({ query })
-      })
-      const imageUrl = URL.createObjectURL(await imageResponse.blob())
-      setImage(imageUrl)
-      toast.success("Image Generated Successfully")
-    } catch (error) {
-      console.log(error)
-      toast.error("Failed to generate content and image")
-    }
-  }
-
-  const schedulePosts = async () => {
-  try {
-    const blob = await fetch(image).then(res => res.blob())
-    const reader = new FileReader()
-    reader.onloadend = async () => {
-      if (typeof reader.result === "string") {
-        const base64data = reader.result.split(",")[1]
-        const res = await fetch("/api/schedule-post", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            content,
-            image_base64: base64data,
-            delay:days,
-            accessToken: session?.accessToken,
-          }),
-        })
-        if (!res.ok) throw new Error("Failed to schedule post")
-        toast.success("Post scheduled successfully. It would starting after mentioned days.")
-      } else {
-        toast.error("Image encoding failed")
-      }
-    }
-    reader.readAsDataURL(blob)
-  } catch (err) {
-    console.log(err)
-    toast.error("Failed to schedule post")
-  }
-}
+  const [temperature, setTemperature] = useState(0.7);
 
 
   return (
     <>
-      <Toaster position="bottom-center" expand={true} />
-      <div className="max-w-5xl mx-auto mt-10 font-funnel">
-        <div className="relative">
-          <textarea
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Enter keywords for the Linkedin post"
-            rows={5}
-            className="w-full p-5 border border-stone-300 rounded-md resize-none font-funnel text-base pr-36"
-          />
-          <div className="absolute bottom-4 right-3 flex gap-2">
-            <button
-              disabled={!query}
-              className={`flex items-center justify-center bg-stone-200 hover:bg-stone-300 px-4 py-2 text-sm rounded-full transition-colors duration-200 ${!query ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
-              onClick={handleGeneration}
-            >
-              <Wand2 size={16} />
-         
-            </button>
-            
-             <button
-                  onClick={() => setOpen(true)}
-                  disabled={!content || !image}
-                  className={`flex items-center justify-center bg-stone-200 hover:bg-stone-300 px-4 py-2 text-sm rounded-full transition-colors duration-200 ${!content ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
-                >
-                  <CalendarClock size={16} />
-                  
-             </button>
+      <Toaster position="top-center" expand={true} />
+      <div className="flex max-w-[88rem] mx-auto font-funnel gap-8 mt-12 items-center justify-center">
+
+  {/* LEFT SIDE (Prompt Box) */}
+  <div className="w-[35%]">
+    <div className="w-full rounded-2xl bg-white border border-stone-300 p-6">
+
+      {/* Text Prompt */}
+      <div className="space-y-2">
+        <label className="text-sm font-semibold text-zinc-900">
+          Text Prompt
+        </label>
+        <textarea
+          placeholder="Write your LinkedIn post idea..."
+          rows={7}
+          className="w-full resize-none rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      {/* Language */}
+      <div className="mt-5 space-y-2">
+        <label className="text-sm font-semibold text-zinc-900">
+          Language
+        </label>
+
+        <div className="flex items-center justify-between rounded-xl border border-zinc-200 bg-white px-4 py-3 cursor-pointer hover:bg-zinc-50 transition">
+          <div className="flex items-center gap-2 text-sm text-zinc-700">
+            <span className="text-base">🌍</span>
+            English (US)
           </div>
+          <span className="text-zinc-500">⌄</span>
         </div>
       </div>
 
-     
-      <Dialog open={open} onClose={setOpen} className="relative z-10">
-          <DialogBackdrop
-            transition
-            className="fixed inset-0 bg-stone-900/50 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"
-          />
+      {/* Style & Tone */}
+      <div className="mt-5 space-y-2">
+        <label className="text-sm font-semibold text-zinc-900">
+          Style & Tone
+        </label>
 
-          <div className="fixed inset-0 z-10 w-screen overflow-y-auto ">
-            <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0 ">
-              <DialogPanel
-                transition
-                className="relative outline-none transform overflow-hidden rounded-lg bg-stone-300 text-left shadow-xl outline -outline-offset-1 outline-stone/10 transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95"
-              >
+        <div className="flex items-center justify-between rounded-xl border border-zinc-200 bg-white px-4 py-3 cursor-pointer hover:bg-zinc-50 transition">
+          <div className="text-sm text-zinc-700">Professional</div>
+          <span className="text-zinc-500">⌄</span>
+        </div>
+      </div>
 
-                <div className="bg-stone-300 px-6 pt-5 pb-4 sm:p-6 sm:pb-4">
-                  <div className="sm:flex sm:items-start">
-                    <h1 className="font-funnel text-md text-stone-800 flex items-center gap-2 flex-wrap">
-                      The post would be published on Linkedin after every
-                      <input
-                        type="number"
-                        min={1}
-                        value={days}
-                        onChange={(e) => setDays(Number(e.target.value))}
-                        className="w-16 px-2 py-1 rounded-md border border-stone-300 bg-white text-stone-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                      days.
-                    </h1>
-                  </div>
-                </div>
+      {/* Temperature */}
+      <div className="mt-5 space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-semibold text-zinc-900">
+            Temperature
+          </label>
+          <span className="text-sm font-medium text-zinc-600">
+            {temperature.toFixed(2)}
+          </span>
+        </div>
 
-                <div className="px-6 py-3 flex justify-end">
-                  <button
-                    onClick={schedulePosts}
-                    disabled={!content || !image}
-                    className={`flex items-center justify-center bg-stone-800 text-stone-200 font-funnel hover:bg-stone-900 px-4 py-2 text-sm rounded-full transition-colors duration-200 ${
-                      !content ? "cursor-not-allowed opacity-60" : "cursor-pointer"
-                    }`}
-                  >
-                    <CalendarClock size={16} className="mr-2" />
-                    Schedule Post
-                  </button>
-                </div>
-              </DialogPanel>
-            </div>
-          </div>
-        </Dialog>
-      <div className="max-w-5xl mx-auto">
-        {(content || image) && (
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-            {content && (
-              <div className="flex flex-col h-full">
-                <h4 className="text-md font-funnel font-semibold">Generated Content:</h4>
-                <div className="mt-3 p-5 bg-stone-100 border border-stone-300 rounded-xl font-funnel prose flex-1">
-                  <Markdown>{content}</Markdown>
-                </div>
-              </div>
-            )}
-            {image && (
-              <div className="flex flex-col h-full">
-                <h4 className="text-md font-funnel font-semibold">Generated Image:</h4>
-                <div className="mt-3 flex-1">
-                  <img
-                    src={image}
-                    alt="Generated Image"
-                    className="w-full h-full object-cover rounded-xl"
-                  />
-                </div>
-              </div>
-            )}
-          </div>
+        <Slider
+          value={[temperature]}
+          onValueChange={(val) => setTemperature(val[0])}
+          min={0}
+          max={1}
+          step={0.05}
+          className="w-full"
+        />
+
+        <div className="flex justify-between text-xs text-zinc-500 font-medium">
+          <span>0 (Precise)</span>
+          <span>1 (Creative)</span>
+        </div>
+      </div>
+
+      {/* Button */}
+      <button className="mt-6 w-full rounded-xl bg-gradient-to-b from-blue-500 to-blue-700 py-3 text-sm font-semibold text-white shadow-lg hover:opacity-95 active:scale-[0.99] transition">
+        Generate Post
+      </button>
+    </div>
+  </div>
+
+  {/* RIGHT SIDE (Content Preview + Image Preview) */}
+  <div className="flex flex-col gap-6 w-[55%]">
+
+    {/* Content Preview */}
+    <div className="h-[22rem] rounded-2xl bg-white border border-stone-300 p-6">
+      <h2 className="text-sm font-semibold text-zinc-900 mb-3">
+        Generated Content
+      </h2>
+
+      <div className="h-full rounded-xl border border-zinc-200 bg-zinc-50 p-4 text-sm text-zinc-700 overflow-y-auto">
+        {content ? (
+          <Markdown>{content}</Markdown>
+        ) : (
+          <p className="text-zinc-500 flex items-center justify-center h-full">
+            Content will appear here...
+          </p>
         )}
       </div>
+    </div>
+
+    {/* Image Preview */}
+    <div className="h-[16rem] rounded-2xl bg-white border border-stone-300 p-6">
+      <h2 className="text-sm font-semibold text-zinc-900 mb-3">
+        Generated Image
+      </h2>
+
+      <div className="h-full rounded-xl border border-zinc-200 bg-zinc-50 flex items-center justify-center overflow-hidden">
+        {image ? (
+          <img
+            src={image}
+            alt="Generated"
+            className="w-full h-full object-cover rounded-xl"
+          />
+        ) : (
+          <p className="text-zinc-500">
+            Image will appear here...
+          </p>
+        )}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+        
+
+
+
+
+
+
+
+
+     
     </>
   )
 }

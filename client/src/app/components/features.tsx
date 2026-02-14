@@ -20,11 +20,11 @@ export default function Features() {
     <div id='features' className="py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-base font-funnel text-zinc-600">Automate Smarter</h2>
+          <h2 className="text-base font-funnel text-stone-600">Automate Smarter</h2>
           <p className="mt-2 font-funnel text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
             Everything you need to grow on LinkedIn
           </p>
-          <p className="mt-5 text-lg font-funnel text-zinc-600">
+          <p className="mt-5 text-lg font-funnel text-stone-600">
             Save time, stay consistent, and build your brand effortlessly. Our automation tools help you post smarter, not harder.
           </p>
         </div>
@@ -33,8 +33,8 @@ export default function Features() {
             {features.map((feature) => (
               <div key={feature.name} className="relative pl-16">
                 <dt className="text-lg font-semibold font-funnel text-gray-900">
-                  <div className="absolute top-0 left-0 flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-900">
-                    <feature.icon className="h-6 w-6 text-zinc-100" />
+                  <div className="absolute top-0 left-0 flex h-12 w-12 items-center justify-center rounded-xl bg-stone-900">
+                    <feature.icon className="h-6 w-6 text-stone-100" />
                   </div>
                   {feature.name}
                 </dt>
