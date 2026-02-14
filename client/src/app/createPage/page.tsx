@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import Navbar from "../components/navbar/navbar";
 import Generate from "../components/generate";
 import Footer from "../components/footer";
@@ -18,7 +17,6 @@ export default async function CreatePage(){
               <main className="flex-grow">
                 <Generate />
               </main>
-
               <Footer />
           </div>
           </>

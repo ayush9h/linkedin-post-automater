@@ -1,14 +1,14 @@
-'use client'
 import SignIn from "./signin"
 import Image from "next/image"
 import Features from "./features"
 
-import { useSession } from "next-auth/react"
 import Link from "next/link"
+import { getServerSession } from "next-auth"
+import { authOptions } from "../lib/auth"
 
-export default function Landing() {
+export default async function Landing() {
 
-  const {data:session} = useSession()
+  const session = await getServerSession(authOptions);
 
   return (
     <>

@@ -8,7 +8,7 @@ export default async function Navbar() {
   const session = await getServerSession(authOptions);
 
   return (
-    <nav className="flex justify-around items-center content-center max-w-xl mx-auto md:max-w-6xl lg:max-w-7xl p-2.5">
+    <nav className="flex justify-between items-center content-center max-w-xl mx-auto md:max-w-4xl lg:max-w-5xl p-3 border border-stone-200 rounded-md  mt-5">
       <Link
         href="/"
         className="font-funnel text-sm md:text-md lg:text-lg xl:text-xl font-semibold"
