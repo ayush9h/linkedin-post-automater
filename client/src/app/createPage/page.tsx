@@ -1,7 +1,5 @@
 import Navbar from "../components/navbar/navbar";
 import Generate from "../components/generate";
-// import Footer from "../components/footer";
-
 import { getServerSession } from "next-auth";
 import { authOptions } from "../lib/auth";
 export default async function CreatePage(){
@@ -15,7 +13,7 @@ export default async function CreatePage(){
           <div className="flex flex-col min-h-screen">
 
               <main className="flex-grow">
-                <Generate />
+                <Generate session={session} />
               </main>
           </div>
           </>

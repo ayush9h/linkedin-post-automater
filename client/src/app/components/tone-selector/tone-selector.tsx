@@ -20,7 +20,7 @@ export default function ToneSelector() {
         </label>
         <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-            <div className="flex items-center justify-between gap-2 rounded-xl border border-stone-200 bg-white px-4 py-3 cursor-pointer hover:bg-stone-50 transition">
+            <div className="flex items-center justify-between gap-2 rounded-md border border-stone-200 bg-white px-4 py-3 cursor-pointer hover:bg-stone-50 transition">
             <span>{currLanguage}</span>
             <ChevronDown className="h-4 w-4 text-stone-500" />
             </div>
