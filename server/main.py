@@ -1,7 +1,7 @@
 from config.development import ORIGINS
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import generate_content, generate_image, schedule_posts
+from routers import generate_content
 
 app = FastAPI(
     title="Linkedin Post Automator - BE",
@@ -23,6 +23,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(generate_image.router, prefix="/api/v1", tags=["Image"])
+# app.include_router(generate_image.router, prefix="/api/v1", tags=["Image"])
 app.include_router(generate_content.router, prefix="/api/v1", tags=["Content"])
-app.include_router(schedule_posts.router, prefix="/api/v1", tags=["Schedule"])
+# app.include_router(schedule_posts.router, prefix="/api/v1", tags=["Schedule"])

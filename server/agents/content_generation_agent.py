@@ -45,19 +45,19 @@ class ContentGenerationAgent(BaseChatAgent):
         pass
 
 
-async def exec_content_generation_agent(prompt: str):
-    agent = ContentGenerationAgent(
-        "ContentGenerator",
-        model_client,
-    )
+# async def exec_content_generation_agent(prompt: str):
+#     agent = ContentGenerationAgent(
+#         "ContentGenerator",
+#         model_client,
+#     )
 
-    user_msg = TextMessage(
-        content=prompt,
-        source="user",
-    )
+#     user_msg = TextMessage(
+#         content=prompt,
+#         source="user",
+#     )
 
-    response = await agent.on_messages(
-        [user_msg],
-        CancellationToken(),
-    )
-    return response.chat_message.content  # type:ignore
+#     response = await agent.on_messages(
+#         [user_msg],
+#         CancellationToken(),
+#     )
+#     return response.chat_message.content  # type:ignore

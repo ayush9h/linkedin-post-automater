@@ -9,5 +9,8 @@ model_client: OpenAIChatCompletionClient = OpenAIChatCompletionClient(
     model_info=ModelInfo(
         family=ModelFamily.UNKNOWN,
         vision=False,
+        function_calling=True,
+        json_output=False,
+        structured_output=True,
     ),  # type: ignore
 )
