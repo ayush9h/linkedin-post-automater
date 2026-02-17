@@ -1,4 +1,3 @@
-import asyncio
 from typing import Sequence
 
 from autogen_agentchat.agents import BaseChatAgent
