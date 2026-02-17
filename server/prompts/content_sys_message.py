@@ -1,0 +1,3 @@
+CONTENT_GENERATOR_MESSAGE = """
+
+"""
