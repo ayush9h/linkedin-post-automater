@@ -6,7 +6,7 @@ from autogen_agentchat.messages import BaseChatMessage, TextMessage
 from autogen_core import CancellationToken
 from autogen_core.models import SystemMessage, UserMessage
 from autogen_ext.models.openai import OpenAIChatCompletionClient
-from prompts.content_sys_message import CONTENT_GENERATOR_MESSAGE
+from prompts.sys_messages import CONTENT_GENERATOR_MESSAGE
 
 
 class ContentGenerationAgent(BaseChatAgent):
@@ -27,7 +27,6 @@ class ContentGenerationAgent(BaseChatAgent):
         cancellation_token: CancellationToken,
     ) -> Response:
 
-        print("coming here")
         prompt = messages[-1].content  # type: ignore
         result = await self.model_client.create(
             messages=[

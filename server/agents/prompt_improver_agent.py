@@ -7,14 +7,14 @@ from autogen_core import CancellationToken
 from autogen_core.models import SystemMessage, UserMessage
 from autogen_ext.models.openai import OpenAIChatCompletionClient
 from config.model import model_client
-from prompts.content_sys_message import PROMPT_IMPROVISATION_MESSAGE
+from prompts.sys_messages import PROMPT_IMPROVISATION_MESSAGE
 
 
 class PromptImprovisationAgent(BaseChatAgent):
     def __init__(self, name: str, model_client: OpenAIChatCompletionClient):
         super().__init__(
             name,
-            "Content generation agent for Linkedin Posts",
+            "Prompt Improver for keywords",
         )
         self.model_client = model_client
 
@@ -27,7 +27,7 @@ class PromptImprovisationAgent(BaseChatAgent):
         messages: Sequence[BaseChatMessage],
         cancellation_token: CancellationToken,
     ) -> Response:
-        print("Going in the prompt improver")
+
         prompt = messages[-1].content  # type: ignore
 
         result = await self.model_client.create(
@@ -43,21 +43,3 @@ class PromptImprovisationAgent(BaseChatAgent):
 
     async def on_reset(self, cancellation_token: CancellationToken) -> None:
         pass
-
-
-async def exec_content_generation_agent(prompt: str):
-    agent = PromptImprovisationAgent(
-        "PromptImprover",
-        model_client,
-    )
-
-    user_msg = TextMessage(
-        content=prompt,
-        source="user",
-    )
-
-    response = await agent.on_messages(
-        [user_msg],
-        CancellationToken(),
-    )
-    return response.chat_message.content  # type:ignore

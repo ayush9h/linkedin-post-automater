@@ -12,7 +12,7 @@ class WebSearchAgent(BaseChatAgent):
     def __init__(self, name: str):
         super().__init__(
             name,
-            "Content generation agent for Linkedin Posts",
+            "Tavily Search Agent for external topics",
         )
 
     @property
@@ -27,8 +27,6 @@ class WebSearchAgent(BaseChatAgent):
 
         prompt = messages[-1].content  # type: ignore
         client = TavilyClient(api_key=TAVILY_KEY)
-
-        print("in tavily")
 
         response = client.search(
             query=prompt,
