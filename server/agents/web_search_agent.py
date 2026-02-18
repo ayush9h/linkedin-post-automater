@@ -4,18 +4,17 @@ from autogen_agentchat.agents import BaseChatAgent
 from autogen_agentchat.base import Response
 from autogen_agentchat.messages import BaseChatMessage, TextMessage
 from autogen_core import CancellationToken
-from autogen_core.models import SystemMessage, UserMessage
-from autogen_ext.models.openai import OpenAIChatCompletionClient
-from prompts.content_sys_message import CONTENT_GENERATOR_MESSAGE
+from autogen_core.models import UserMessage
+from config.development import TAVILY_KEY
+from tavily import TavilyClient
 
 
-class ContentGenerationAgent(BaseChatAgent):
-    def __init__(self, name: str, model_client: OpenAIChatCompletionClient):
+class WebSearchAgent(BaseChatAgent):
+    def __init__(self, name: str):
         super().__init__(
             name,
             "Content generation agent for Linkedin Posts",
         )
-        self.model_client = model_client
 
     @property
     def produced_message_types(self) -> Sequence[type[BaseChatMessage]]:
@@ -28,16 +27,17 @@ class ContentGenerationAgent(BaseChatAgent):
     ) -> Response:
 
         prompt = messages[-1].content  # type: ignore
+        client = TavilyClient(api_key=TAVILY_KEY)
 
-        result = await self.model_client.create(
-            messages=[
-                SystemMessage(content=CONTENT_GENERATOR_MESSAGE),
-                UserMessage(content=prompt, source="user"),
-            ]
+        response = client.search(
+            query=prompt,
+            search_depth="basic",
+            topic="general",
+            max_results=3,
         )
-        text: str = str(result.content)
+        web_content = "\n".join(item["content"] for item in response["results"])
 
-        response = TextMessage(content=text, source=self.name)
+        response = TextMessage(content=web_content, source=self.name)
         return Response(chat_message=response)
 
     async def on_reset(self, cancellation_token: CancellationToken) -> None:
