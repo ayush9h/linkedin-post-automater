@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast, Toaster } from "sonner";
-import LanguageSelector from "./language-selector/language-selector";
+import WebSearchToggle from "./web-search/web-search";
 import ToneSelector from "./tone-selector/tone-selector";
 import TemperatureSelector from "./temperature-selector/temperature-selector";
 import Preview from "./preview/preview";
@@ -15,6 +15,7 @@ export default function Generate({ session }: { session: Session }) {
 
   const [loadingContent, setLoadingContent] = useState(false);
   const [loadingImage, setLoadingImage] = useState(false);
+  const [isWebSearch, setIsWebSearch] = useState(false)
 
   const handleGeneratePost = async () => {
     if (!query.trim()) {
@@ -26,11 +27,12 @@ export default function Generate({ session }: { session: Session }) {
       setLoadingContent(true);
       setContent("");
 
+      // Hits the NextJs endpoint to generate content
       toast.info('Post generation started')
       const res = await fetch("/api/generate-content", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({ query:query, is_web_search: isWebSearch }),
       });
 
       if (!res.ok) throw new Error("Failed to generate content");
@@ -66,8 +68,8 @@ export default function Generate({ session }: { session: Session }) {
               />
             </div>
 
-            <LanguageSelector />
             <ToneSelector />
+            <WebSearchToggle enabled={isWebSearch} onChange={setIsWebSearch} />
             <TemperatureSelector />
 
             <div className="flex gap-2 mt-6">
