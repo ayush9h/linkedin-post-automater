@@ -4,7 +4,6 @@ from autogen_agentchat.agents import BaseChatAgent
 from autogen_agentchat.base import Response
 from autogen_agentchat.messages import BaseChatMessage, TextMessage
 from autogen_core import CancellationToken
-from autogen_core.models import UserMessage
 from config.development import TAVILY_KEY
 from tavily import TavilyClient
 
@@ -29,16 +28,30 @@ class WebSearchAgent(BaseChatAgent):
         prompt = messages[-1].content  # type: ignore
         client = TavilyClient(api_key=TAVILY_KEY)
 
+        print("in tavily")
+
         response = client.search(
             query=prompt,
             search_depth="basic",
             topic="general",
-            max_results=3,
+            max_results=2,
+            include_raw_content=True,
         )
+
         web_content = "\n".join(item["content"] for item in response["results"])
 
-        response = TextMessage(content=web_content, source=self.name)
-        return Response(chat_message=response)
+        final_prompt = f"""
+        {prompt}
+        
+        --- WEB SEARCH RESULTS ---
+        {web_content}
+        """
+        return Response(
+            chat_message=TextMessage(
+                content=final_prompt + "web_search:done",
+                source=self.name,
+            )
+        )
 
     async def on_reset(self, cancellation_token: CancellationToken) -> None:
         pass

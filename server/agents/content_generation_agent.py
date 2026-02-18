@@ -27,8 +27,8 @@ class ContentGenerationAgent(BaseChatAgent):
         cancellation_token: CancellationToken,
     ) -> Response:
 
+        print("coming here")
         prompt = messages[-1].content  # type: ignore
-
         result = await self.model_client.create(
             messages=[
                 SystemMessage(content=CONTENT_GENERATOR_MESSAGE),

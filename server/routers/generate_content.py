@@ -16,6 +16,8 @@ async def generate_post_content(request: ContentRequest):
     result = await flow.run(
         task=TextMessage(content=request.query, source="user"),
     )
+
+    print(result)
     response = result.messages[-1].content  # type: ignore
 
     return {"content": response}  # type : ignore

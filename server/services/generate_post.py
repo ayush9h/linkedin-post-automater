@@ -16,36 +16,37 @@ prompt_improvisation_agent = PromptImprovisationAgent(
 )
 
 
-def wants_web_search(msg: BaseChatMessage) -> bool:
-    """
-    Checks whether the current request has web_search enabled or not
+builder = DiGraphBuilder()
 
-    :param msg: Current user message
-    :type msg: BaseChatMessage
-    :return: True if web_search enabled else false
-    :rtype: bool
-    """
-    content = msg.content.lower()  # type: ignore
-    return "web_search:true" in content
+builder.add_node(prompt_improvisation_agent)
+builder.add_node(web_search_agent)
+builder.add_node(content_generation_agent)
 
-
-# ==================== Graphflow =============================
-builder: DiGraphBuilder = DiGraphBuilder()
-builder.add_node(content_generation_agent).add_node(
-    prompt_improvisation_agent
-).add_node(web_search_agent)
+builder.set_entry_point(prompt_improvisation_agent)
 
 builder.add_edge(
     prompt_improvisation_agent,
     web_search_agent,
-    condition=wants_web_search,
+    condition=lambda msg: "web_search:true" in msg.to_model_text().lower(),
 )
 
-builder.add_edge(prompt_improvisation_agent, content_generation_agent)
-builder.add_edge(web_search_agent, content_generation_agent)
+builder.add_edge(
+    prompt_improvisation_agent,
+    content_generation_agent,
+    condition=lambda msg: "web_search:true" not in msg.to_model_text().lower(),
+)
+
+builder.add_edge(
+    web_search_agent,
+    content_generation_agent,
+    condition=lambda msg: "web_search:done" in msg.to_model_text().lower(),
+    activation_group="final",
+    activation_condition="any",
+)
 
 graph = builder.build()
-flow: GraphFlow = GraphFlow(
-    [content_generation_agent, prompt_improvisation_agent],
+
+flow = GraphFlow(
+    participants=builder.get_participants(),
     graph=graph,
 )

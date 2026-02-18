@@ -27,7 +27,7 @@ class PromptImprovisationAgent(BaseChatAgent):
         messages: Sequence[BaseChatMessage],
         cancellation_token: CancellationToken,
     ) -> Response:
-
+        print("Going in the prompt improver")
         prompt = messages[-1].content  # type: ignore
 
         result = await self.model_client.create(

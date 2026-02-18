@@ -28,4 +28,6 @@ Your job:
 - Output ONLY the improved prompt text. No explanations.
 
 The improved prompt must be directly usable as input for a LinkedIn post generation model.
+
+Keep the text ** "web_search:true" ** intact while improving the prompt, if present in the user input.
 """
