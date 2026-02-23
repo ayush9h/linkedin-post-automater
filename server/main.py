@@ -1,13 +1,25 @@
+from contextlib import asynccontextmanager
+
 from config.development import ORIGINS
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import generate_content
+from routers import generate_content, schedule_posts
+from scheduler import start_scheduler
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    start_scheduler()
+    yield
+
 
 app = FastAPI(
     title="Linkedin Post Automator - BE",
     summary="Services, routes for Linkedin post Automator",
     version="0.1.0",
+    lifespan=lifespan,
 )
+
 
 origins = [
     "http://localhost",
@@ -25,4 +37,5 @@ app.add_middleware(
 
 # app.include_router(generate_image.router, prefix="/api/v1", tags=["Image"])
 app.include_router(generate_content.router, prefix="/api/v1", tags=["Content"])
-# app.include_router(schedule_posts.router, prefix="/api/v1", tags=["Schedule"])
+app.include_router(schedule_posts.router, prefix="/api/v1", tags=["Schedule"])
+app.include_router(schedule_posts.router, prefix="/api/v1", tags=["Schedule"])

@@ -1,10 +1,10 @@
-from typing import Optional
+from datetime import datetime
+from typing import List, Optional
 
 from pydantic import BaseModel
 
 
 class ScheduleRequest(BaseModel):
     content: str
-    image_base64: Optional[str] = None
     access_token: str
-    delay: int
+    schedule_times: List[datetime]

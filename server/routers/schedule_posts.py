@@ -1,28 +1,49 @@
-# import requests
-# from fastapi import APIRouter
+import json
+import uuid
+from datetime import timezone
 
-# router = APIRouter()
+import redis
+from config.development import REDIS_URL
+from fastapi import APIRouter
+from schemas.schedule import ScheduleRequest
+
+r = redis.Redis.from_url(url=str(REDIS_URL))
 
 
-# @router.post("/post-linkedin", status_code=200)
-# async def schedule_post(request: ScheduleRequest):
+router = APIRouter()
 
-#     profile_resp = requests.get(
-#         "https://api.linkedin.com/v2/userinfo",
-#         headers={"Authorization": f"Bearer {request.access_token}"},
-#     )
-#     profile_data = profile_resp.json()
-#     user_urn = f"urn:li:person:{profile_data['sub']}"
 
-#     # schedule = request.delay * 86400
+def put_post_in_redis(content, access_token, schedule_times):
+    for scheduled_time in schedule_times:
 
-#     # entry = RedBeatSchedulerEntry(
-#     #     name=f"linkedin-post-every-{schedule}-secs",
-#     #     task="publish_linkedin_post",
-#     #     schedule=schedule,
-#     #     args=[request.content, request.image_base64, user_urn, request.access_token],
-#     #     app=celery,
-#     # )
-#     # entry.save()
+        if scheduled_time.tzinfo is None:
+            scheduled_time = scheduled_time.replace(tzinfo=timezone.utc)
 
-#     return {"status": "success"}
+        timestamp = int(scheduled_time.timestamp())
+
+        payload = json.dumps(
+            {
+                "id": str(uuid.uuid4()),
+                "content": content,
+                "access_token": access_token,
+                "scheduled_time": scheduled_time.isoformat(),
+            }
+        )
+
+        r.zadd("linkedin_scheduled_posts", {payload: timestamp})
+
+
+@router.post("/post-linkedin", status_code=200)
+async def schedule_post(request: ScheduleRequest):
+    try:
+        put_post_in_redis(request.content, request.access_token, request.schedule_times)
+        return {
+            "message": "Your post has been scheduled successfully",
+            "status": "success",
+        }
+
+    except Exception as e:
+        return {
+            "message": f"Error occurred due to {e}",
+            "status": "failed",
+        }

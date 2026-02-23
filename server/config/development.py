@@ -12,3 +12,4 @@ PORT = os.getenv("PORT")
 LINKEDIN_API_URL = "https://api.linkedin.com/v2"
 ORIGINS = os.getenv("ORIGINS")
 TAVILY_KEY = os.getenv("TAVILY_KEY")
+REDIS_URL = os.getenv("REDIS_URL")
