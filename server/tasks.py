@@ -43,6 +43,10 @@ def publish_linkedin_post(
             image_bytes=None,
         )
         print(response)
+        return {
+            "data": "Linkedin post successful",
+            "status": "success",
+        }
     except Exception as e:
         return {
             "data": f"Error occurred due to {e}",

@@ -7,6 +7,11 @@ import ToneSelector from "./tone-selector/tone-selector";
 import TemperatureSelector from "./temperature-selector/temperature-selector";
 import Preview from "./preview/preview";
 import { Session } from "next-auth";
+import {Calendar} from '@/components/ui/calendar'
+import { addDays } from "date-fns";
+import { type DateRange } from "react-day-picker"
+
+
 
 export default function Generate({ session }: { session: Session }) {
   const [query, setQuery] = useState("");
@@ -16,6 +21,14 @@ export default function Generate({ session }: { session: Session }) {
   const [loadingContent, setLoadingContent] = useState(false);
   const [loadingImage, setLoadingImage] = useState(false);
   const [isWebSearch, setIsWebSearch] = useState(false)
+
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: new Date(new Date().getFullYear(), 0, 12),
+    to: addDays(new Date(new Date().getFullYear(), 0, 12), 30),
+  })
+
+
+  const [visible, setIsvisible] = useState(false);
 
   const handleGeneratePost = async () => {
     if (!query.trim()) {
@@ -47,6 +60,10 @@ export default function Generate({ session }: { session: Session }) {
       setLoadingContent(false);
     }
   };
+
+
+
+
 
   return (
     <>
@@ -81,9 +98,22 @@ export default function Generate({ session }: { session: Session }) {
                 {loadingContent ? "Generating..." : "Generate Post"}
               </button>
 
-              <button className="w-full rounded-md bg-stone-900 text-sm font-semibold text-stone-100 p-3">
+              <button className="w-full rounded-md bg-stone-900 text-sm font-semibold text-stone-100 p-3" onClick={()=>setIsvisible(!visible)}>
                 Schedule Post
               </button>
+              {visible ?
+                <Calendar
+                  mode="range"
+                  defaultMonth={dateRange?.from}
+                  selected={dateRange}
+                  onSelect={setDateRange}
+                  numberOfMonths={1}
+                  disabled={(date) =>
+                    date > new Date() || date < new Date("1900-01-01")
+                  }
+                />
+              : 
+              <></>}
             </div>
           </div>
         </div>
