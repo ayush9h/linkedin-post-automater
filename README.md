@@ -1,5 +1,9 @@
 # LinkedIn Post Automation
 
+## Update
+Refactoring the code to use Dramatiq and Redis as scheduling workflow, and updating the AutoGen agents.
+Feature Branch: https://github.com/ayush9h/linkedin-post-automater/tree/feature-overhaul
+
 ## Overview
 
 LinkedIn Post Automation is an application designed to automate the process of creating, and posting content on LinkedIn. Leveraging AI-powered tools for content generation, and image generation, this project enables users to optimize their LinkedIn posts for maximum engagement and professionalism.
