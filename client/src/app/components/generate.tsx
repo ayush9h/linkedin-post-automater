@@ -11,6 +11,13 @@ import {Calendar} from '@/components/ui/calendar'
 import { addDays } from "date-fns";
 import { type DateRange } from "react-day-picker"
 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 
 export default function Generate({ session }: { session: Session }) {
@@ -98,22 +105,43 @@ export default function Generate({ session }: { session: Session }) {
                 {loadingContent ? "Generating..." : "Generate Post"}
               </button>
 
-              <button className="w-full rounded-md bg-stone-900 text-sm font-semibold text-stone-100 p-3" onClick={()=>setIsvisible(!visible)}>
-                Schedule Post
-              </button>
-              {visible ?
-                <Calendar
-                  mode="range"
-                  defaultMonth={dateRange?.from}
-                  selected={dateRange}
-                  onSelect={setDateRange}
-                  numberOfMonths={1}
-                  disabled={(date) =>
-                    date > new Date() || date < new Date("1900-01-01")
-                  }
-                />
-              : 
-              <></>}
+            
+              {/* Schedule Post with Calendar Dialog */}
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button className="w-full rounded-md bg-stone-900 text-sm font-semibold text-stone-100 p-3">
+                    Schedule Post
+                  </button>
+                </DialogTrigger>
+
+                <DialogContent className="sm:max-w-md font-funnel">
+                  <DialogHeader>
+                    <DialogTitle>Select Schedule Range</DialogTitle>
+                  </DialogHeader>
+
+                  <Calendar
+                    mode="range"
+                    defaultMonth={dateRange?.from}
+                    selected={dateRange}
+                    onSelect={setDateRange}
+                    numberOfMonths={1}
+                    className="w-full"
+                    
+                    />
+
+                  {/* <p>{dateRange?.from}</p> */}
+
+                  <div className="flex justify-end mt-4">
+                    <button
+                      className="rounded-md bg-stone-900 text-sm font-semibold text-white px-4 py-2"
+                      onClick={() => console.log(dateRange)}
+                    >
+                      Confirm Selection
+                    </button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
             </div>
           </div>
         </div>
