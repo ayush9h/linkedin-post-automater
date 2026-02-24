@@ -1,7 +1,7 @@
 # LinkedIn Post Automation
 
 ## Update
-Refactoring the code to use Dramatiq and Redis as scheduling workflow, and updating the AutoGen agents.
+Currently refactoring the code to use Dramatiq and Redis as scheduling workflow, and updating the AutoGen agents.
 Feature Branch: https://github.com/ayush9h/linkedin-post-automater/tree/feature-overhaul
 
 ## Overview
