@@ -2,49 +2,40 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <>
-      <footer className="mt-20 text-stone-900 border-t border-stone-300 font-funnel">
-        <div className="max-w-5xl mx-auto p-6 md:py-10">
-          <div className="sm:flex sm:items-center sm:justify-between">
+    <footer className="max-w-7xl mx-auto mt-12 bg-stone-950 rounded-t-3xl overflow-hidden">
+      <div className="px-6 py-12 font-funnel flex flex-col items-center text-center">
 
+        <Link
+          href="/"
+          className="text-6xl md:text-7xl lg:text-8xl font-semibold tracking-tight
+            bg-gradient-to-b from-white via-stone-300 to-stone-700
+            bg-clip-text text-transparent">
+          Post.ai
+        </Link>
+
+        <ul className="mt-10 flex gap-8 flex-wrap justify-center text-sm text-stone-400">
+          <li>
             <Link
-              href={"/"}
-              className="flex items-center mb-4 sm:mb-0 space-x-3 text-sm md:text-md lg:text-lg xl:text-xl font-semibold"
-            >
-                Post.ai
+              href="https://github.com/ayush9h/linkedin-post-automater"
+              className="hover:text-white transition-colors">
+              GitHub
             </Link>
+          </li>
 
-            <ul className="flex gap-6 flex-wrap items-center mb-6 text-sm font-medium text-stone-600 sm:mb-0">
-              <li>
-                <Link
-                  href={"https://github.com/ayush9h/linkedin-post-automater"}
-                  className="hover:underline"
-                >
-                  GitHub
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={"https://github.com/ayush9h/linkedin-post-automater"}
-                  className="hover:underline"
-                >
-                  Privacy Policy
-                </Link>
-              </li>
-             
-            </ul>
-          </div>
-
-          <hr className="my-6 border-stone-200 sm:mx-auto lg:my-8" />
-          <span className="block text-sm text-stone-500 sm:text-center">
-            © {new Date().getFullYear()}{" "}
-            <Link href={"/"} className="hover:underline">
-              Post.ai
+          <li>
+            <Link
+              href="https://github.com/ayush9h/linkedin-post-automater"
+              className="hover:text-white transition-colors">
+              Privacy Policy
             </Link>
-            . All Rights Reserved.
-          </span>
+          </li>
+        </ul>
+
+        <div className="mt-12 border-t border-stone-800 w-full pt-6 text-sm text-stone-500">
+          © {new Date().getFullYear()} Post.ai. All rights reserved.
         </div>
-      </footer>
-    </>
+
+      </div>
+    </footer>
   );
 }

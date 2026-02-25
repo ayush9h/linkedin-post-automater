@@ -46,9 +46,6 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
-html{
-  background-color: oklch(0.96 0 264);
-}
 
 :root {
   --radius: 0.625rem;

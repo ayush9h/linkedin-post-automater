@@ -25,7 +25,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${funnel.variable} antialiased`}>
+      <body className={`${funnel.variable} antialiased bg-stone-200/50`}>
         <SessionProviderClient session={session}>
           {children}
         </SessionProviderClient>
