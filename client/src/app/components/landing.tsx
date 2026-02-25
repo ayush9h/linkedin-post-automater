@@ -12,7 +12,7 @@ export default async function Landing() {
 
   return (
     <>
-    <div className="flex flex-col justify-around items-center content-center max-w-xl mx-auto md:max-w-6xl lg:max-w-7xl mt-5 rounded-3xl bg-[radial-gradient(circle_at_top,_rgba(64,64,64,0.85)_0%,_rgba(28,28,28,0.9)_45%,_rgba(10,10,10,1)_100%)]">
+    <div className="flex flex-col justify-around items-center content-center max-w-xl mx-auto md:max-w-6xl lg:max-w-7xl mt-5 rounded-3xl bg-[radial-gradient(circle_at_top,_rgba(64,64,64,0.85)_0%,_rgba(28,28,28,0.95)_35%,_rgba(10,10,10,1)_65%)]">
        <div className="max-w-2xl text-center">
           <h2 className="text-3xl md:text-4xl xl:text-6xl font-semibold text-stone-100 font-funnel mt-10">
             Automate your Linkedin in seconds.
