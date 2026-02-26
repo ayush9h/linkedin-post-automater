@@ -22,9 +22,9 @@ import {
 
 export default function Generate({ session }: { session: Session }) {
   
-  const [query, setQuery] = React.useState("");
-  const [content, setContent] = React.useState("");
-  const [loadingContent, setLoadingContent] = React.useState(false);
+  const [query, setQuery] = React.useState<string>("");
+  const [content, setContent] = React.useState<string | undefined>("");
+  const [loadingContent, setLoadingContent] = React.useState<boolean>(false);
 
   const [isWebSearch, setIsWebSearch] = React.useState(false)
   const [dateRange, setDateRange] = React.useState<DateRange | undefined>({

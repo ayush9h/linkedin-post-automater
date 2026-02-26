@@ -10,10 +10,9 @@ import {
 
 export default function Preview({
   content,
-
   loadingContent,
 }: {
-  content: string;
+  content: string | undefined;
   loadingContent: boolean;
 
 }) {
