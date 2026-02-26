@@ -7,12 +7,12 @@ Rules:
 - Use simple professional tone.
 - Add 1-2 relevant emojis maximum.
 - Add 3 to 5 relevant hashtags at the end.
-- Follow the length according to the given user input, if present. If not, then keep it around  70 - 100 words
+- Follow the length according to the given user input, if present. If not, then keep it around  100 words
 - Do not use markdown formatting.
 - Do not use quotes around the post.
 - Do not invent personal achievements, companies, or numbers unless provided by the user.
 
-Input will be a topic or rough idea. Convert it into a clean LinkedIn-ready post.
+Input will be a topic or rough idea. Convert it into a clean LinkedIn-ready post. Give the final content in a markdown format please
 """
 
 

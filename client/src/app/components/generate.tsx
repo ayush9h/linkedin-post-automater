@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import * as React from 'react'
 import { toast, Toaster } from "sonner";
 import WebSearchToggle from "./web-search/web-search";
-import ToneSelector from "./tone-selector/tone-selector";
+
 import TemperatureSelector from "./temperature-selector/temperature-selector";
 import Preview from "./preview/preview";
 import { Session } from "next-auth";
@@ -21,21 +21,16 @@ import {
 
 
 export default function Generate({ session }: { session: Session }) {
-  const [query, setQuery] = useState("");
-  const [content, setContent] = useState("");
-  const [image, setImage] = useState("");
+  
+  const [query, setQuery] = React.useState("");
+  const [content, setContent] = React.useState("");
+  const [loadingContent, setLoadingContent] = React.useState(false);
 
-  const [loadingContent, setLoadingContent] = useState(false);
-  const [loadingImage, setLoadingImage] = useState(false);
-  const [isWebSearch, setIsWebSearch] = useState(false)
-
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+  const [isWebSearch, setIsWebSearch] = React.useState(false)
+  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
     from: new Date(new Date().getFullYear(), 0, 12),
     to: addDays(new Date(new Date().getFullYear(), 0, 12), 30),
   })
-
-
-  const [visible, setIsvisible] = useState(false);
 
   const handleGeneratePost = async () => {
     if (!query.trim()) {
@@ -47,7 +42,6 @@ export default function Generate({ session }: { session: Session }) {
       setLoadingContent(true);
       setContent("");
 
-      // Hits the NextJs endpoint to generate content
       toast.info('Post generation started')
       const res = await fetch("/api/generate-content", {
         method: "POST",
@@ -68,15 +62,53 @@ export default function Generate({ session }: { session: Session }) {
     }
   };
 
+  
+  const handleSchedulePost = async () => {
+    if (!content) {
+      toast.error("Generate content first");
+      return;
+    }
 
+    if (!dateRange?.from || !dateRange?.to) {
+      toast.error("Select a valid date range");
+      return;
+    }
 
+    try {
+      toast.info("Scheduling post...");
 
+      const scheduleTimes = [
+        dateRange.from.toISOString(),
+        dateRange.to.toISOString(),
+      ];
+
+      const res = await fetch("/api/schedule-post", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content,
+          access_token: session.accessToken,
+          schedule_times: scheduleTimes,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data?.message || "Scheduling failed");
+      }
+
+      toast.success(data.message || "Post scheduled successfully");
+    } catch (err:any) {
+      toast.error(err.message || "Something went wrong");
+    }
+  };
 
   return (
     <>
       <Toaster position="top-center" expand={true} />
 
-      <div className="flex max-w-[90rem] mx-auto font-funnel gap-4 justify-center mt-10">
+      <div className="flex max-w-7xl mx-auto font-funnel gap-4 justify-center mt-10">
         <div className="w-[30%] self-start">
           <div className="w-full rounded-md bg-white border border-stone-300 p-6">
             <div>
@@ -92,7 +124,6 @@ export default function Generate({ session }: { session: Session }) {
               />
             </div>
 
-            <ToneSelector />
             <WebSearchToggle enabled={isWebSearch} onChange={setIsWebSearch} />
             <TemperatureSelector />
 
@@ -128,15 +159,12 @@ export default function Generate({ session }: { session: Session }) {
                     className="w-full"
                     
                     />
-
-                  {/* <p>{dateRange?.from}</p> */}
-
                   <div className="flex justify-end mt-4">
                     <button
                       className="rounded-md bg-stone-900 text-sm font-semibold text-white px-4 py-2"
-                      onClick={() => console.log(dateRange)}
+                      onClick={() => handleSchedulePost()}
                     >
-                      Confirm Selection
+                      Confirm and Schedule
                     </button>
                   </div>
                 </DialogContent>
@@ -148,9 +176,7 @@ export default function Generate({ session }: { session: Session }) {
 
         <Preview
           content={content}
-          image={image}
           loadingContent={loadingContent}
-          loadingImage={loadingImage}
         />
       </div>
     </>
