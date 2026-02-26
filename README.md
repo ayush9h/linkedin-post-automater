@@ -1,13 +1,11 @@
 # LinkedIn Post Automation
 
-## Update
-Currently refactoring the code to use Dramatiq and Redis as scheduling workflow, and updating the AutoGen agents.
-Feature Branch: https://github.com/ayush9h/linkedin-post-automater/tree/feature-overhaul
 
 ## Overview
 
 LinkedIn Post Automation is an application designed to automate the process of creating, and posting content on LinkedIn. Leveraging AI-powered tools for content generation, this project enables users to optimize their LinkedIn posts for maximum engagement and professionalism.
 
+![WhatsApp Image 2026-02-26 at 8 16 29 PM](https://github.com/user-attachments/assets/dcf1765c-5c24-4e96-ad70-b98b324d2345)
 
 ## Architecture
 <img width="1919" height="461" alt="image" src="https://github.com/user-attachments/assets/9eedb1a7-3417-4acc-aac7-51df6eb488a2" />
@@ -43,7 +41,8 @@ The **LinkedIn Post Automation** system automates the entire process of content 
      - The frontend receives the **generated content** (text) and **image** (as PNG).
 
 
-<!-- <img width="1541" height="853" alt="image" src="https://github.com/user-attachments/assets/036e2de9-836c-4846-813b-2155f2ff5b0e" /> -->
+<img width="1600" height="775" alt="image" src="https://github.com/user-attachments/assets/c3162a2c-5c5b-493b-872f-ca9fcecaecb9" />
+
 
 ### 2. **Posting to LinkedIn**
    - **Backend Process**:
@@ -57,14 +56,12 @@ The **LinkedIn Post Automation** system automates the entire process of content 
          - The backend successfully creates the post and returns a **confirmation message** with the LinkedIn post details (URL, post ID).
 
 
-<!-- <img width="1409" height="825" alt="image" src="https://github.com/user-attachments/assets/6d9ebb8a-dffe-4fed-830a-5dad08a592de" /> -->
+![WhatsApp Image 2026-02-26 at 8 20 22 PM](https://github.com/user-attachments/assets/4d92efca-2f88-4a2a-81bd-f71fddb6142f)
 
    - **System Response**: The frontend shows a success notification, confirming that the post has been successfully uploaded to LinkedIn.
 
 
-
 <img width="1071" height="705" alt="image" src="https://github.com/user-attachments/assets/638ec888-146d-483c-9eaa-429bb13c7e48" />
-
 
 
 ### Summary of Flow:
