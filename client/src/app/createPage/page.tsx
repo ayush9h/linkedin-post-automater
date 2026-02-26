@@ -1,11 +1,10 @@
-"use client"
-import { useSession } from "next-auth/react";
-import Navbar from "../components/navbar";
+import Navbar from "../components/navbar/navbar";
 import Generate from "../components/generate";
-import Footer from "../components/footer";
-export default function CreatePage(){
+import { getServerSession } from "next-auth";
+import { authOptions } from "../lib/auth";
+export default async function CreatePage(){
 
-    const { data: session } = useSession();
+    const session = await getServerSession(authOptions);
 
     if (session) {
       return (
@@ -14,10 +13,8 @@ export default function CreatePage(){
           <div className="flex flex-col min-h-screen">
 
               <main className="flex-grow">
-                <Generate />
+                <Generate session={session} />
               </main>
-
-              <Footer />
           </div>
           </>
       );

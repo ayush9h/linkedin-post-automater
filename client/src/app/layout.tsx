@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Funnel_Display } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
 import SessionProviderClient from "./providers/SessionProviderClient";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./lib/auth";
 
-const funnel = Funnel_Display({
+const funnel = Geist({
   variable: "--font-funnel",
   subsets: ["latin"],
   display: "swap",
@@ -25,7 +25,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${funnel.variable} antialiased`}>
+      <body className={`${funnel.variable} antialiased bg-stone-200/50`}>
         <SessionProviderClient session={session}>
           {children}
         </SessionProviderClient>

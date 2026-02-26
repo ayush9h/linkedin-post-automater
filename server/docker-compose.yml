@@ -1,25 +1,17 @@
 services:
-  fastapi:
+  post_backend:
     build: .
-    command: python main.py
+    command: uvicorn main:app
     volumes:
       - .:/app
     ports:
-      - "5000:5000"
+      - "8080:8080"
     env_file:
       - .env
 
-  celery_worker:
+  dramatiq_worker:
     build: .
-    command: celery -A celery_app worker --loglevel=info --pool=solo
-    volumes:
-      - .:/app
-    env_file:
-      - .env
-
-  celery_beat:
-    build: .
-    command: celery -A celery_app.celery beat --loglevel=info --scheduler redbeat.RedBeatScheduler
+    command: dramatiq tasks
     volumes:
       - .:/app
     env_file:

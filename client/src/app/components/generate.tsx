@@ -1,182 +1,184 @@
-'use client'
-import { Wand2, CalendarClock } from "lucide-react"
-import { useState } from "react"
-import Markdown from "react-markdown"
-import { useSession } from "next-auth/react"
-import { toast, Toaster } from "sonner"
-import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react'
+"use client";
 
-export default function Generate() {
-  const { data: session } = useSession()
-  const [query, setQuery] = useState("")
-  const [content, setContent] = useState("")
-  const [image, setImage] = useState("")
-  const [open, setOpen] = useState(true)
-  const [days, setDays] = useState(1)
+import * as React from 'react'
+import { toast, Toaster } from "sonner";
+import WebSearchToggle from "./web-search/web-search";
 
-  const handleGeneration = async () => {
+import TemperatureSelector from "./temperature-selector/temperature-selector";
+import Preview from "./preview/preview";
+import { Session } from "next-auth";
+import {Calendar} from '@/components/ui/calendar'
+import { addDays } from "date-fns";
+import { type DateRange } from "react-day-picker"
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+
+
+export default function Generate({ session }: { session: Session }) {
+  
+  const [query, setQuery] = React.useState<string>("");
+  const [content, setContent] = React.useState<string | undefined>("");
+  const [loadingContent, setLoadingContent] = React.useState<boolean>(false);
+
+  const [isWebSearch, setIsWebSearch] = React.useState(false)
+  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
+    from: new Date(new Date().getFullYear(), 0, 12),
+    to: addDays(new Date(new Date().getFullYear(), 0, 12), 30),
+  })
+
+  const handleGeneratePost = async () => {
+    if (!query.trim()) {
+      toast.error("Please enter a prompt");
+      return;
+    }
+
     try {
-      toast.info("Content generation started")
-      const contentResponse = await fetch("/api/generate-content", {
+      setLoadingContent(true);
+      setContent("");
+
+      toast.info('Post generation started')
+      const res = await fetch("/api/generate-content", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query })
-      })
-      const data = await contentResponse.json()
-      setContent(data.content)
-      toast.success("Content Generated Successfully")
+        body: JSON.stringify({ query:query, is_web_search: isWebSearch }),
+      });
 
-      toast.info("Image Generation started")
-      const imageResponse = await fetch("/api/generate-image", {
+      if (!res.ok) throw new Error("Failed to generate content");
+
+      const data = await res.json();
+
+      setContent(data.content); 
+      toast.success("Post generated!");
+    } catch (err) {
+      toast.error("Something went wrong");
+    } finally {
+      setLoadingContent(false);
+    }
+  };
+
+  
+  const handleSchedulePost = async () => {
+    if (!content) {
+      toast.error("Generate content first");
+      return;
+    }
+
+    if (!dateRange?.from || !dateRange?.to) {
+      toast.error("Select a valid date range");
+      return;
+    }
+
+    try {
+      toast.info("Scheduling post...");
+
+      const scheduleTimes = [
+        dateRange.from.toISOString(),
+        dateRange.to.toISOString(),
+      ];
+
+      const res = await fetch("/api/schedule-post", {
         method: "POST",
-        body: JSON.stringify({ query })
-      })
-      const imageUrl = URL.createObjectURL(await imageResponse.blob())
-      setImage(imageUrl)
-      toast.success("Image Generated Successfully")
-    } catch (error) {
-      console.log(error)
-      toast.error("Failed to generate content and image")
-    }
-  }
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content,
+          access_token: session.accessToken,
+          schedule_times: scheduleTimes,
+        }),
+      });
 
-  const schedulePosts = async () => {
-  try {
-    const blob = await fetch(image).then(res => res.blob())
-    const reader = new FileReader()
-    reader.onloadend = async () => {
-      if (typeof reader.result === "string") {
-        const base64data = reader.result.split(",")[1]
-        const res = await fetch("/api/schedule-post", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            content,
-            image_base64: base64data,
-            delay:days,
-            accessToken: session?.accessToken,
-          }),
-        })
-        if (!res.ok) throw new Error("Failed to schedule post")
-        toast.success("Post scheduled successfully. It would starting after mentioned days.")
-      } else {
-        toast.error("Image encoding failed")
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data?.message || "Scheduling failed");
       }
-    }
-    reader.readAsDataURL(blob)
-  } catch (err) {
-    console.log(err)
-    toast.error("Failed to schedule post")
-  }
-}
 
+      toast.success(data.message || "Post scheduled successfully");
+    } catch (err:any) {
+      toast.error(err.message || "Something went wrong");
+    }
+  };
 
   return (
     <>
-      <Toaster position="bottom-center" expand={true} />
-      <div className="max-w-5xl mx-auto mt-10 font-funnel">
-        <div className="relative">
-          <textarea
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Enter prompt"
-            rows={5}
-            className="w-full p-5 border border-zinc-300 rounded-xl resize-none font-funnel text-base pr-36"
-          />
-          <div className="absolute bottom-4 right-3 flex gap-2">
-            <button
-              disabled={!query}
-              className={`flex items-center justify-center bg-zinc-200 hover:bg-zinc-300 px-4 py-2 text-sm rounded-full transition-colors duration-200 ${!query ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
-              onClick={handleGeneration}
-            >
-              <Wand2 size={16} className="mr-2" />
-              Generate
-            </button>
-            
-             <button
-                  onClick={() => setOpen(true)}
-                  disabled={!content || !image}
-                  className={`flex items-center justify-center bg-zinc-200 hover:bg-zinc-300 px-4 py-2 text-sm rounded-full transition-colors duration-200 ${!content ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
-                >
-                  <CalendarClock size={16} className="mr-2" />
-                  Schedule Settings
-             </button>
-          </div>
-        </div>
-      </div>
+      <Toaster position="top-center" expand={true} />
 
-     
-      <Dialog open={open} onClose={setOpen} className="relative z-10">
-          <DialogBackdrop
-            transition
-            className="fixed inset-0 bg-zinc-900/50 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"
-          />
+      <div className="flex max-w-7xl mx-auto font-funnel gap-4 justify-center mt-10">
+        <div className="w-[30%] self-start">
+          <div className="w-full rounded-md bg-white border border-stone-300 p-6">
+            <div>
+              <label className="text-sm font-semibold text-stone-900">
+                Text Prompt
+              </label>
+              <textarea
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Write your LinkedIn post idea or keyword"
+                rows={7}
+                className="w-full resize-none rounded-md border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400"
+              />
+            </div>
 
-          <div className="fixed inset-0 z-10 w-screen overflow-y-auto ">
-            <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0 ">
-              <DialogPanel
-                transition
-                className="relative outline-none transform overflow-hidden rounded-lg bg-zinc-300 text-left shadow-xl outline -outline-offset-1 outline-zinc/10 transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95"
+            <WebSearchToggle enabled={isWebSearch} onChange={setIsWebSearch} />
+            <TemperatureSelector />
+
+            <div className="flex gap-2 mt-6">
+              <button
+                onClick={handleGeneratePost}
+                disabled={loadingContent}
+                className="w-full rounded-md bg-stone-900 text-sm font-semibold text-stone-100 p-3 disabled:opacity-60"
               >
+                {loadingContent ? "Generating..." : "Generate Post"}
+              </button>
 
-                <div className="bg-zinc-300 px-6 pt-5 pb-4 sm:p-6 sm:pb-4">
-                  <div className="sm:flex sm:items-start">
-                    <h1 className="font-funnel text-md text-zinc-800 flex items-center gap-2 flex-wrap">
-                      The post would be published on Linkedin after every
-                      <input
-                        type="number"
-                        min={1}
-                        value={days}
-                        onChange={(e) => setDays(Number(e.target.value))}
-                        className="w-16 px-2 py-1 rounded-md border border-zinc-300 bg-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                      days.
-                    </h1>
-                  </div>
-                </div>
-
-                <div className="px-6 py-3 flex justify-end">
-                  <button
-                    onClick={schedulePosts}
-                    disabled={!content || !image}
-                    className={`flex items-center justify-center bg-zinc-800 text-zinc-200 font-funnel hover:bg-zinc-900 px-4 py-2 text-sm rounded-full transition-colors duration-200 ${
-                      !content ? "cursor-not-allowed opacity-60" : "cursor-pointer"
-                    }`}
-                  >
-                    <CalendarClock size={16} className="mr-2" />
+            
+              {/* Schedule Post with Calendar Dialog */}
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button className="w-full rounded-md bg-stone-900 text-sm font-semibold text-stone-100 p-3">
                     Schedule Post
                   </button>
-                </div>
-              </DialogPanel>
+                </DialogTrigger>
+
+                <DialogContent className="sm:max-w-md font-funnel">
+                  <DialogHeader>
+                    <DialogTitle>Select Schedule Range</DialogTitle>
+                  </DialogHeader>
+
+                  <Calendar
+                    mode="range"
+                    defaultMonth={dateRange?.from}
+                    selected={dateRange}
+                    onSelect={setDateRange}
+                    numberOfMonths={1}
+                    className="w-full"
+                    
+                    />
+                  <div className="flex justify-end mt-4">
+                    <button
+                      className="rounded-md bg-stone-900 text-sm font-semibold text-white px-4 py-2"
+                      onClick={() => handleSchedulePost()}
+                    >
+                      Confirm and Schedule
+                    </button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
             </div>
           </div>
-        </Dialog>
-      <div className="max-w-5xl mx-auto">
-        {(content || image) && (
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-            {content && (
-              <div className="flex flex-col h-full">
-                <h4 className="text-md font-funnel font-semibold">Generated Content:</h4>
-                <div className="mt-3 p-5 bg-zinc-100 border border-zinc-300 rounded-xl font-funnel prose flex-1">
-                  <Markdown>{content}</Markdown>
-                </div>
-              </div>
-            )}
-            {image && (
-              <div className="flex flex-col h-full">
-                <h4 className="text-md font-funnel font-semibold">Generated Image:</h4>
-                <div className="mt-3 flex-1">
-                  <img
-                    src={image}
-                    alt="Generated Image"
-                    className="w-full h-full object-cover rounded-xl"
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-        )}
+        </div>
+
+        <Preview
+          content={content}
+          loadingContent={loadingContent}
+        />
       </div>
     </>
-  )
+  );
 }

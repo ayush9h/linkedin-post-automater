@@ -1,10 +1,25 @@
-import uvicorn
-from config.development import ORIGINS, PORT
+from contextlib import asynccontextmanager
+
+from config.development import ORIGINS
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import generate_content, generate_image, schedule_posts
+from routers import generate_content, schedule_posts
+from scheduler import start_scheduler
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    start_scheduler()
+    yield
+
+
+app = FastAPI(
+    title="Linkedin Post Automator - BE",
+    summary="Services, routes for Linkedin post Automator",
+    version="0.1.0",
+    lifespan=lifespan,
+)
+
 
 origins = [
     "http://localhost",
@@ -20,10 +35,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(generate_image.router, prefix="/api/v1", tags=["Image"])
+# app.include_router(generate_image.router, prefix="/api/v1", tags=["Image"])
 app.include_router(generate_content.router, prefix="/api/v1", tags=["Content"])
 app.include_router(schedule_posts.router, prefix="/api/v1", tags=["Schedule"])
-
-if __name__ == "__main__":
-    port = int(PORT) if PORT else 5000
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
+app.include_router(schedule_posts.router, prefix="/api/v1", tags=["Schedule"])
