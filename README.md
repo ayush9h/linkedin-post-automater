@@ -39,7 +39,7 @@ The **LinkedIn Post Automation** system automates the entire process of content 
      - The frontend receives the **generated content** (text) and **image** (as PNG).
 
 
-<img width="1541" height="853" alt="image" src="https://github.com/user-attachments/assets/036e2de9-836c-4846-813b-2155f2ff5b0e" />
+<!-- <img width="1541" height="853" alt="image" src="https://github.com/user-attachments/assets/036e2de9-836c-4846-813b-2155f2ff5b0e" /> -->
 
 ### 2. **Posting to LinkedIn**
    - **Backend Process**:
@@ -53,7 +53,7 @@ The **LinkedIn Post Automation** system automates the entire process of content 
          - The backend successfully creates the post and returns a **confirmation message** with the LinkedIn post details (URL, post ID).
 
 
-<img width="1409" height="825" alt="image" src="https://github.com/user-attachments/assets/6d9ebb8a-dffe-4fed-830a-5dad08a592de" />
+<!-- <img width="1409" height="825" alt="image" src="https://github.com/user-attachments/assets/6d9ebb8a-dffe-4fed-830a-5dad08a592de" /> -->
 
    - **System Response**: The frontend shows a success notification, confirming that the post has been successfully uploaded to LinkedIn.
 
