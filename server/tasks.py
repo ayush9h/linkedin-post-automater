@@ -42,7 +42,6 @@ def publish_linkedin_post(
             access_token=access_token,
             image_bytes=None,
         )
-        print(response)
         return {
             "data": "Linkedin post successful",
             "status": "success",

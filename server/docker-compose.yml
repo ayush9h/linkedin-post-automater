@@ -1,17 +1,17 @@
 services:
   post_backend:
     build: .
-    command: uvicorn main:app --reload
+    command: uvicorn main:app
     volumes:
       - .:/app
     ports:
-      - "5000:5000"
+      - "8080:8080"
     env_file:
       - .env
 
   dramatiq_worker:
     build: .
-    command: dramatiq taks
+    command: dramatiq tasks
     volumes:
       - .:/app
     env_file:

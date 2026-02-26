@@ -2,7 +2,7 @@
 
 ## Overview
 
-LinkedIn Post Automation is an application designed to automate the process of creating, and posting content on LinkedIn. Leveraging AI-powered tools for content generation, and image generation, this project enables users to optimize their LinkedIn posts for maximum engagement and professionalism.
+LinkedIn Post Automation is an application designed to automate the process of creating, and posting content on LinkedIn. Leveraging AI-powered tools for content generation, this project enables users to optimize their LinkedIn posts for maximum engagement and professionalism.
 
 
 ## Architecture
@@ -12,8 +12,7 @@ LinkedIn Post Automation is an application designed to automate the process of c
 ## Features
 
 1. **AI-Powered Content Generation**: Automatically generate professional LinkedIn posts tailored to your input.
-2. **Custom Image Creation**: Generate high-quality, AI-designed images based on user prompts.
-3. **Automated Posting**: Schedule and post content directly to LinkedIn for multiple days.
+2. **Automated Posting**: Schedule and post content directly to LinkedIn for multiple days.
 
 
 ## Tech Stack
@@ -21,21 +20,15 @@ LinkedIn Post Automation is an application designed to automate the process of c
 ### **Frontend**
 - **Framework**: NextJs
 - **Styling**: Tailwind CSS
-- **Libraries**:
-  - `react-markdown`: For rendering Markdown content.
-  - `@lucide-react`: For icons.
 
 ### **Backend**
-- **Framework**: FastAPI, Redis, Celery
+- **Framework**: FastAPI, Redis, Dramatiq
 - **Languages**: Python
-- **APIs and Libraries**:
-  - `linkedin-api`: For LinkedIn API interactions.
-  - `requests`: For HTTP requests.
 
 
 ## Project Flow
 
-The **LinkedIn Post Automation** system automates the entire process of content creation, image generation, and posting to LinkedIn. Here’s how it works:
+The **LinkedIn Post Automation** system automates the entire process of content creation, and posting to LinkedIn. Here’s how it works:
 
 ### 1. **User Input and Content Generation**
    - **Frontend**: The user provides a **LinkedIn post topic** (text-based prompt) on the NextJs interface. 
@@ -48,16 +41,7 @@ The **LinkedIn Post Automation** system automates the entire process of content 
 
 <img width="1541" height="853" alt="image" src="https://github.com/user-attachments/assets/036e2de9-836c-4846-813b-2155f2ff5b0e" />
 
-### 2. **Combining Content and Image**
-   - **Frontend**: The user can review the generated LinkedIn post and image.
-   - **System Response**:
-     - The frontend then sends the **final content** (post text) and **image file** (PNG) to the backend for posting to LinkedIn.
-
-
-<img width="1511" height="829" alt="image" src="https://github.com/user-attachments/assets/36c79180-5e14-41a5-9333-9d894d8e2f29" />
-
-
-### 3. **Posting to LinkedIn**
+### 2. **Posting to LinkedIn**
    - **Backend Process**:
      - The backend uses the **LinkedIn API** to upload the image and post the content.
      - The process includes two main steps:
@@ -84,14 +68,12 @@ The **LinkedIn Post Automation** system automates the entire process of content 
 1. **Frontend**: User inputs a post topic and image description → Sends request to backend.
 2. **Backend**:
    - Generates post content (AI-powered).
-   - Generates a custom image (AI-powered).
-3. **Image Upload**: Backend uploads the generated image to LinkedIn via the `POST /assets` endpoint and receives an image asset ID.
-4. **Post Creation**: Backend creates a LinkedIn post using the content and image asset ID → Post is uploaded to LinkedIn.
+3. **Post Creation**: Backend creates a LinkedIn post using the content asset ID → Post is uploaded to LinkedIn.
 
 ### **AI Models and Services**
-- **LLM Provider**: Groq and Gemini
-- **Models**: GPT-oss and Gemini-flash-preview models
-- **Agents**: Autogen agents for text and image generation.
+- **LLM Provider**: Groq
+- **Models**: GPT-oss 
+- **Agents**: Autogen agents for text generation.
 
 ### **Deployment**
 - **Frontend**: Deployed on Vercel.
@@ -123,20 +105,23 @@ The **LinkedIn Post Automation** system automates the entire process of content 
 ### **Backend**
 1. Create a virtual environment and activate it:
    ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+   uv venv .venv
+   .venv/Scripts/activate
    ```
 2. Install dependencies:
    ```bash
-   pip install -r requirements.txt
+   uv pip install -r requirements.txt
    ```
 3. Create a `.env` file and add the following keys:
-   ```env
-    GROQ_API_KEY=<Your-api-key>
-    REDIS_URL=<Your-redis-url>
-    PORT=5000
-    GEMINI_API_KEY=<Your-gemini-key>
-    ORIGINS=<Your-frontend-endpoint>
+   ```bash
+    ACCESS_TOKEN=<access_token>
+    EMAIL=<email_id>
+    GROQ_API_KEY=<groq_key>
+    HUGGINGFACE_API_KEY=<huggingface_key>
+    PASSWORD=<password>
+    PERSON_URN_KEY=<urn_key>
+    TAVILY_KEY=<tavily_key>
+    REDIS_URL=<redis_url>
    ```
 4. Build the docker-compose:
    ```bash
@@ -146,71 +131,6 @@ The **LinkedIn Post Automation** system automates the entire process of content 
     ```bash
     docker-compose up
     ```
-
-## API Endpoints
-
-### **1. Content Generation**
-- **URL**: `/api/v1/generate-content`
-- **Method**: `POST`
-- **Payload**:
-  ```json
-  {
-    "query": "Write a LinkedIn post about AI automation."
-  }
-  ```
-- **Response**:
-  ```json
-  {
-    "content": "<Generated LinkedIn post>"
-  }
-  ```
-
-### **2. Image Generation**
-- **URL**: `/api/v1/generate-image`
-- **Method**: `POST`
-- **Payload**:
-  ```json
-  {
-    "query": "Professional AI-powered image with technology theme"
-  }
-  ```
-- **Response**: Returns image in bytes.
-
-### **3. Post to LinkedIn**
-- **URL**: `/api/v1/post-linkedin`
-- **Method**: `POST`
-- **Payload**:
-  ```json
-  {
-    "generated_content": "<LinkedIn post content>",
-    "image_path": bytes
-  }
-  ```
-- **Response**:
-  ```json
-  {
-    "status": "success",
-    "linkedinpost": "<LinkedIn asset>"
-  }
-  ```
-
-
-
-## Usage
-
-1. **Generate Content**:
-   - Provide a topic or prompt via the frontend.
-   - AI generates professional LinkedIn post content.
-
-2. **Generate Image**:
-   - Input a description for the desired image.
-   - AI returns a customized, professional-grade image.
-
-3. **Post to LinkedIn**:
-   - Combine generated content and image.
-   - Post directly to your LinkedIn account.
-
-
 
 ## Contribution
 Feel free to contribute by:
