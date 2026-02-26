@@ -1,6 +1,5 @@
 # LinkedIn Post Automation
 
-
 ## Overview
 
 LinkedIn Post Automation is an application designed to automate the process of creating, and posting content on LinkedIn. Leveraging AI-powered tools for content generation, this project enables users to optimize their LinkedIn posts for maximum engagement and professionalism.
@@ -9,7 +8,6 @@ LinkedIn Post Automation is an application designed to automate the process of c
 
 ## Architecture
 <img width="1919" height="461" alt="image" src="https://github.com/user-attachments/assets/9eedb1a7-3417-4acc-aac7-51df6eb488a2" />
-
 
 ## Features
 
@@ -66,20 +64,10 @@ The **LinkedIn Post Automation** system automates the entire process of content 
 
 ### Summary of Flow:
 
-1. **Frontend**: User inputs a post topic and image description → Sends request to backend.
+1. **Frontend**: User inputs a post topic description → Sends request to backend.
 2. **Backend**:
    - Generates post content (AI-powered).
 3. **Post Creation**: Backend creates a LinkedIn post using the content asset ID → Post is uploaded to LinkedIn.
-
-### **AI Models and Services**
-- **LLM Provider**: Groq
-- **Models**: GPT-oss 
-- **Agents**: Autogen agents for text generation.
-
-### **Deployment**
-- **Frontend**: Deployed on Vercel.
-- **Backend**: Hosted on Render.
-- **Database**: Redis for storing the scheduled posts.
 
 
 ## Setup Guide
